@@ -22,11 +22,14 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 # Establecer el directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar los archivos del proyecto al contenedor
-COPY . .
+# Copiar solo composer.json y composer.lock antes de copiar todo el proyecto
+COPY composer.json composer.lock ./
 
-# Instalar las dependencias de Composer
+# Instalar las dependencias de Composer antes de copiar el resto del proyecto
 RUN composer install --optimize-autoloader --no-dev
+
+# Copiar el resto de los archivos del proyecto
+COPY . .
 
 # Dar permisos a las carpetas necesarias
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
