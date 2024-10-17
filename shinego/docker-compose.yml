@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shinego_app
+    volumes:
+      - .:/var/www/html
+    networks:
+      - shinego_network
+
+  webserver:
+    image: nginx:alpine
+    container_name: shinego_nginx
+    volumes:
+      - .:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8000:80"
+    networks:
+      - shinego_network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: shinygo_db
+    environment:
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_DATABASE: ShinyGo
+      MYSQL_USER: shinygo_user
+      MYSQL_PASSWORD: admin123
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - shinego_network
+
+networks:
+  shinego_network:
+    driver: bridge
+
+volumes:
+  db_data:
