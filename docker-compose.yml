@@ -8,12 +8,11 @@ services:
     container_name: shinego_app
     volumes:
       - .:/var/www/html:delegated
-      - /var/www/html/vendor
-      - /var/www/html/node_modules
     networks:
       - shinego_network
     depends_on:
       - db
+    entrypoint: ["/bin/sh", "-c", "/var/www/html/wait-for-it.sh db 3306 -- php-fpm"]
 
   webserver:
     image: nginx:alpine
