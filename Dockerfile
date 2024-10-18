@@ -1,7 +1,7 @@
 # Usar la imagen oficial de PHP con PHP-FPM
 FROM php:8.2-fpm
 
-# Instalar extensiones necesarias para Laravel y netcat-openbsd
+# Instalar extensiones necesarias para Laravel y otras utilidades
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     netcat-openbsd \
+    net-tools \ 
     && docker-php-ext-install pdo pdo_mysql zip mbstring
 
 # Instalar Composer
@@ -26,18 +27,15 @@ WORKDIR /var/www/html
 # Copiar los archivos del proyecto al contenedor
 COPY . .
 
+# Copiar y dar permisos al script de entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Dar permisos a las carpetas necesarias
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
 
-# Instalar las dependencias de Composer
-RUN composer install --optimize-autoloader --no-dev
-
-# Instalar dependencias de frontend y compilar assets
-RUN npm install && npm run build
-
-# Ejecutar las migraciones automáticamente
-RUN php artisan migrate --force
-
+# Exponer el puerto de PHP-FPM
 EXPOSE 9000
 
-CMD ["php-fpm"]
+# Usar el entrypoint personalizado
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
