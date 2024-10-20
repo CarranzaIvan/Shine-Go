@@ -13,6 +13,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
     <link href="{{asset('templates/xhtml/vendor/jqvmap/css/jqvmap.min.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('templates/xhtml/vendor/chartist/css/chartist.min.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="{{asset('templates/xhtml/vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}" rel="stylesheet">
     <link href="{{asset('templates/xhtml/css/style.css')}}" rel="stylesheet">
     <link href="https://cdn.lineicons.com/2.0/LineIcons.css" rel="stylesheet">
@@ -137,6 +138,14 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{route('citas')}}">Listado de citas</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                            <i class="flaticon-381-gift"></i>
+                            <span class="nav-text">Promociones</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{route('promociones')}}">Listado de promociones</a></li>
                         </ul>
                     </li>
 
