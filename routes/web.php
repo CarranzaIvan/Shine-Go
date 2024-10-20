@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Controllers\PromocionController;
+use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Citas\CitaController;
 // Ruta de inicio
@@ -26,6 +27,7 @@ Route::get('dashboard/citas', function () {
     return view('dashboard.citas.index');
 })->name('citas');
 
+
 // Trae los datos de las citas
 Route::get('/citas', [CitaController::class, 'getCitas']);
 //Trea les horas ocupadas
@@ -34,3 +36,16 @@ Route::get('/citas/horas-ocupadas', [CitaController::class, 'getHorasOcupadas'])
 Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 Route::get('/citas/detalle', [CitaController::class, 'getDetalleCita']); // Nueva ruta para obtener detalles de la cita
 Route::post('/citas/eliminar', [CitaController::class, 'deleteCita']); // Nueva ruta para eliminar la cita
+
+// Rutas para promociones
+Route::get('dashboard/promociones', [PromocionController::class, 'index'])->name('promociones');
+Route::get('dashboard/promociones/crear', function () {
+    return view('dashboard.promociones.create');
+})->name('crear_promocion');
+Route::post('dashboard/promociones', [PromocionController::class, 'store'])->name('promociones.store');
+Route::get('/servicios/search', [ServicioController::class, 'search'])->name('servicios.search');
+Route::get('dashboard/promociones/{id}/editar', [PromocionController::class, 'edit'])->name('promociones.edit');
+Route::put('dashboard/promociones/{id}', [PromocionController::class, 'update'])->name('promociones.update');
+Route::delete('dashboard/promociones/{id}', [PromocionController::class, 'destroy'])->name('promociones.destroy');
+Route::get('dashboard/promociones/{id}', [PromocionController::class, 'show'])->name('promociones.show');
+
