@@ -6,8 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Citas\Cita;
 use Illuminate\Http\Request;
 
+
 class CitaController extends Controller
 {
+
+    public function index()
+    {
+        // Cargar las citas junto con la relación 'servicio'
+        $citas = Cita::with('servicio')->get();
+        return view('dashboard.citas.index', compact('citas'));
+    }
     public function getCitas()
     {
         // Mapeamos 'id_cita' como 'id' para que FullCalendar lo use como identificador

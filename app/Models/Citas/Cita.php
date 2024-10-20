@@ -40,7 +40,7 @@ class Cita extends Model
      // Relación con el modelo Servicio
      public function servicio()
      {
-         return $this->belongsTo(Servicio::class, 'id_servicio');
+        return $this->belongsTo(Servicio::class, 'id_servicio', 'id');
      }
 }
 
