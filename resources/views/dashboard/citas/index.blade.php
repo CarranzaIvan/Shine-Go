@@ -1,6 +1,6 @@
 @extends('dashboard.layout.app_dashboard')
 
-@section('title', 'Promociones')
+@section('title', 'Citas')
 @section('content')
 
 
@@ -21,6 +21,7 @@
                                 <th class="text-center">Nombre del Servicio</th>
                                 <th class="text-center">Fecha de Cita</th>
                                 <th class="text-center">Hora de Cita</th>
+                                <th class="text-center">Estado</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -31,13 +32,14 @@
                                 <td class="text-center">{{ $cita->servicio->nomServicio ?? 'Servicio no disponible' }}</td>
                                 <td class="text-center">{{ $cita->fecha_cita }}</td>
                                 <td class="text-center">{{ $cita->hora_cita }}</td>
+                                <td class="text-center">{{ $cita->estado }}</td>
                                 <td class="text-center">
-                                    <div class="d-flex">
-                                        <a href="{{ route('promociones.show', $cita->id_cita) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
-                                        <a href="{{ route('promociones.edit', $cita->id_cita) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
-                                        <button class="btn btn-danger shadow btn-xs sharp" data-toggle="modal" data-target="#deleteModal" data-action="{{ route('promociones.destroy', $cita->id_cita) }}"><i class="fa fa-trash"></i></button>
-                                    </div>
+                                    <center>
+                                        <a href="{{ route('dashboard.citas.show', $cita->id_cita) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+                                        <button class="btn btn-danger shadow btn-xs sharp" data-toggle="modal" data-target="#deleteModal" data-action="{{ route('dashboard.citas.destroy', $cita->id_cita) }}"><i class="fa fa-trash"></i></button>
+                                    </center>
                                 </td>
+
                             </tr>
                             @endforeach
                         </tbody>
@@ -68,8 +70,11 @@
                         </div>
                     </div>
 
+
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
+                            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
                             $('#deleteModal').on('show.bs.modal', function(event) {
                                 var button = $(event.relatedTarget);
                                 var action = button.data('action');
@@ -81,6 +86,20 @@
                 </div>
             </div>
         </div>
+        <!-- SweetAlert para mensajes de éxito -->
+        @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+        </script>
+        @endif
     </div>
 </div>
 @endsection
