@@ -26,18 +26,18 @@
                         <tbody>
                             @foreach($promociones as $promocion)
                             <tr>
-                                <<td class="text-center">{{ $promocion->nombrePromocion }}</td>
-                                    <td class="text-center">{{ $promocion->descuento }}%</td>
-                                    <td class="text-center">{{ $promocion->descripcion }}</td>
-                                    <td class="text-center">{{ $promocion->servicio->nomServicio }}</td>
-                                    <td class="text-center">{{ $promocion->fecha_expiracion }}</td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <a href="{{ route('promociones.show', $promocion->id) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
-                                            <a href="{{ route('promociones.edit', $promocion->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
-                                            <button class="btn btn-danger shadow btn-xs sharp" data-toggle="modal" data-target="#deleteModal" data-action="{{ route('promociones.destroy', $promocion->id) }}"><i class="fa fa-trash"></i></button>
-                                        </div>
-                                    </td>
+                                <td class="text-center">{{ $promocion->nombrePromocion }}</td>
+                                <td class="text-center">{{ $promocion->descuento }}%</td>
+                                <td class="text-center">{{ $promocion->descripcion }}</td>
+                                <td class="text-center">{{ $promocion->servicio->nomServicio }}</td>
+                                <td class="text-center">{{ $promocion->fecha_expiracion }}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="{{ route('promociones.show', $promocion->id) }}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+                                        <a href="{{ route('promociones.edit', $promocion->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1"><i class="fa fa-pencil"></i></a>
+                                        <button class="btn btn-danger shadow btn-xs sharp" data-toggle="modal" data-target="#deleteModal" data-action="{{ route('promociones.destroy', $promocion->id) }}"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -80,6 +80,19 @@
                 </div>
             </div>
         </div>
+        @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            });
+        </script>
+        @endif
     </div>
 </div>
 @endsection

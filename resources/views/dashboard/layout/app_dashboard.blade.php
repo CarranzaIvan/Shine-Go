@@ -14,9 +14,12 @@
     <link href="{{asset('templates/xhtml/vendor/jqvmap/css/jqvmap.min.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('templates/xhtml/vendor/chartist/css/chartist.min.css')}}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="{{asset('templates/xhtml/vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}" rel="stylesheet">
     <link href="{{asset('templates/xhtml/css/style.css')}}" rel="stylesheet">
     <link href="https://cdn.lineicons.com/2.0/LineIcons.css" rel="stylesheet">
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -202,7 +205,6 @@
     ***********************************-->
     <!-- Required vendors -->
     <script src="{{asset('templates/xhtml/vendor/global/global.min.js')}}"></script>
-    <script src="{{asset('templates/xhtml/vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
     <script src="{{asset('templates/xhtml/js/custom.min.js')}}"></script>
     <script src="{{asset('templates/xhtml/js/deznav-init.js')}}"></script>
     <!-- Apex Chart -->
