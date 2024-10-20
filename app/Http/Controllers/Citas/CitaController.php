@@ -16,6 +16,31 @@ class CitaController extends Controller
         $citas = Cita::with('servicio')->get();
         return view('dashboard.citas.index', compact('citas'));
     }
+    public function show($id)
+    {
+        // Cargar la cita con el servicio y usuario relacionado
+        $cita = Cita::with(['servicio'])->find($id);
+
+        if (!$cita) {
+            return redirect()->back()->withErrors('Cita no encontrada');
+        }
+
+        return view('dashboard.citas.show', compact('cita'));
+    }
+    public function destroy($id)
+    {
+        $cita = Cita::find($id);
+
+        if ($cita) {
+            $cita->delete();
+            return redirect()->route('dashboard.citas.index')->with('success', 'Cita eliminada exitosamente.');
+        } else {
+            return redirect()->route('dashboard.citas.index')->with('error', 'No se pudo encontrar la cita.');
+        }
+    }
+
+
+
     public function getCitas()
     {
         // Mapeamos 'id_cita' como 'id' para que FullCalendar lo use como identificador
