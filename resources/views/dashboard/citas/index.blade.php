@@ -11,8 +11,8 @@
                 <h4 class="card-title text-white">Listado de servicios</h4>
             </div>
             <div class="card-body">
-                <a href="{{ route('crear_promocion') }}" class="btn mb-3 text-white" style="background-color: #0D5C75;">
-                    <i class="fa fa-plus"></i> Agregar Cita</a>
+                <!--<a href="{{ route('crear_promocion') }}" class="btn mb-3 text-white" style="background-color: #0D5C75;">
+                    <i class="fa fa-plus"></i> Agregar Cita</a>-->
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
