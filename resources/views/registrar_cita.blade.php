@@ -5,63 +5,65 @@
 @section('content')
 
 <style>
-   /* Estilo general para el contenedor del calendario */
-#calendar-container {
-    background-color: #fdfdfd;
-    border-radius: 20px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-    padding: 40px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 40px;
-    width: 100%; /* Aseguramos que ocupe todo el ancho */
-}
+    /* Estilo general para el contenedor del calendario */
+    #calendar-container {
+        background-color: #fdfdfd;
+        border-radius: 20px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+        padding: 40px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 40px;
+        width: 100%;
+        /* Aseguramos que ocupe todo el ancho */
+    }
 
-/* Efecto de elevación al pasar el ratón */
-#calendar-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
-}
+    /* Efecto de elevación al pasar el ratón */
+    #calendar-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+    }
 
-/* Estilo del calendario */
-#calendar {
-    width: 100% !important; /* Aseguramos que ocupe todo el ancho */
-    max-width: 100% !important; /* Aseguramos que no se limite el ancho máximo */
-    margin: 0 auto;
-    border-radius: 20px;
-    overflow: hidden;
-    background-color: #f9fafb;
-}
+    /* Estilo del calendario */
+    #calendar {
+        width: 100% !important;
+        /* Aseguramos que ocupe todo el ancho */
+        max-width: 100% !important;
+        /* Aseguramos que no se limite el ancho máximo */
+        margin: 0 auto;
+        border-radius: 20px;
+        overflow: hidden;
+        background-color: #f9fafb;
+    }
 
-/* Estilos para los días de la semana (encabezados) */
-.fc-day-header {
-    background: linear-gradient(135deg, #ffcc80 0%, #ffa726 100%);
-    color: #2c2c2c;
-    font-weight: bold;
-    padding: 15px;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 14px;
-    border-bottom: 2px solid #e0e0e0;
-}
+    /* Estilos para los días de la semana (encabezados) */
+    .fc-day-header {
+        background: linear-gradient(135deg, #ffcc80 0%, #ffa726 100%);
+        color: #2c2c2c;
+        font-weight: bold;
+        padding: 15px;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 14px;
+        border-bottom: 2px solid #e0e0e0;
+    }
 
-/* Estilos para eventos */
-.fc-event {
-    border-radius: 10px;
-    padding: 10px;
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+    /* Estilos para eventos */
+    .fc-event {
+        border-radius: 10px;
+        padding: 10px;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-/* Estilos para el día de hoy */
-.fc-today {
-    background-color: #ffecb3;
-    border: 2px solid #ffb74d;
-    font-weight: bold;
-}
-
+    /* Estilos para el día de hoy */
+    .fc-today {
+        background-color: #ffecb3;
+        border: 2px solid #ffb74d;
+        font-weight: bold;
+    }
 </style>
 
 <!--CALENDARIO-->
@@ -188,7 +190,7 @@
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="button" id="regresar" class="btn btn-secondary">Regresar</button>
-                            <button type="submit" class="btn btn-primary">Reservar</button>
+                            <button id="reservarCita" type="submit" class="btn btn-primary">Reservar</button>
                         </div>
                     </form>
                 </div>
@@ -369,7 +371,7 @@
                                     text: response.error
                                 });
                             } else {
-                                
+
                                 // Mostrar los detalles de la cita en SweetAlert (Swal)
                                 Swal.fire({
                                     title: 'Detalles de la Cita',
@@ -403,49 +405,64 @@
                                 });
 
                                 document.getElementById('deleteCita').addEventListener('click', function() {
-                                    // Lógica para eliminar la cita...
-                                    Swal.fire({
-                                        title: '¿Estás seguro?',
-                                        text: "¡No podrás revertir esto!",
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Sí, cancelar cita',
-                                        cancelButtonText: 'No, mantener cita'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            $.ajax({
-                                                url: '/citas/eliminar',
-                                                type: 'DELETE',
-                                                data: {
-                                                    id: eventObj.id,
-                                                    _token: '{{ csrf_token() }}'
-                                                },
-                                                success: function(response) {
-                                                    if (response.success) {
-                                                        Swal.fire(
-                                                            '¡Eliminada!',
-                                                            'La cita ha sido cancelada.',
-                                                            'success'
-                                                        ).then(() => {
-                                                            location.reload();
-                                                        });
-                                                    } else {
-                                                        Swal.fire(
-                                                            'Error',
-                                                            'No se pudo cancelar la cita.',
-                                                            'error'
-                                                        );
+                                    var currentDateTime = new Date();
+                                    var citaDateTime = new Date(response.fecha + ' ' + response.hora.split(' - ')[0]);
+
+                                    // Calcular la diferencia en horas entre la fecha y hora actual y la fecha y hora de la cita
+                                    var diffInHours = (citaDateTime - currentDateTime) / (1000 * 60 * 60);
+
+                                    if (diffInHours < 24) {
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Oops...',
+                                            text: 'No puedes cancelar la cita con menos de 24 horas de anticipación.'
+                                        });
+                                        return;
+                                    } else {
+                                        // Lógica para eliminar la cita...
+                                        Swal.fire({
+                                            title: '¿Estás seguro?',
+                                            text: "¡No podrás revertir esto!",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Sí, cancelar cita',
+                                            cancelButtonText: 'No, mantener cita'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                $.ajax({
+                                                    url: '/citas/eliminar',
+                                                    type: 'DELETE',
+                                                    data: {
+                                                        id: eventObj.id,
+                                                        _token: '{{ csrf_token() }}'
+                                                    },
+                                                    success: function(response) {
+                                                        if (response.success) {
+                                                            Swal.fire(
+                                                                '¡Eliminada!',
+                                                                'La cita ha sido cancelada.',
+                                                                'success'
+                                                            ).then(() => {
+                                                                location.reload();
+                                                            });
+                                                        } else {
+                                                            Swal.fire(
+                                                                'Error',
+                                                                'No se pudo cancelar la cita.',
+                                                                'error'
+                                                            );
+                                                        }
+                                                    },
+                                                    error: function(jqXHR, textStatus, errorThrown) {
+                                                        console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                                                        Swal.fire('Error', 'Error al cancelar la cita.', 'error');
                                                     }
-                                                },
-                                                error: function(jqXHR, textStatus, errorThrown) {
-                                                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
-                                                    Swal.fire('Error', 'Error al cancelar la cita.', 'error');
-                                                }
-                                            });
-                                        }
-                                    });
+                                                });
+                                            }
+                                        });
+                                    }
                                 });
                             }
                         },
@@ -459,24 +476,7 @@
                     Swal.fire('Error', 'No se puede identificar la cita.', 'error');
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         });
-
         calendar.render();
     });
 </script>
@@ -485,59 +485,59 @@
 
 
 <script>
+    // Función para validar y mostrar el modal de formulario
+    function validarYMostrarFormulario(horaSeleccionada) {
+        var currentDateTime = new Date(); // Hora actual
+        var citaDateTime = new Date(a + ' ' + horaSeleccionada.split(' - ')[0] + ':00'); // Fecha y hora de la cita
+
+        // Calcular la diferencia en horas entre la fecha y hora actual y la fecha y hora de la cita
+        var diffInHours = (citaDateTime - currentDateTime) / (1000 * 60 * 60);
+
+        if (diffInHours < 24) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Las citas deben reservarse con al menos 24 horas de anticipación.'
+            });
+            return;
+        } else {
+            $('#modal-reservas').modal('hide');
+            $('#modal-formulario').modal('show');
+            $('#fecha_cita').val(a); //para input
+            $('#hora_cita').val(horaSeleccionada); //para input
+        }
+    }
+
+    // Eventos para cada botón de horario con la validación integrada
     $('#btn_h1').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('08:00 - 09:00'); //para input
-        //$('#fecha_cita').text(a);//para p
-        //$('#hora_cita').text('08:00 - 09:00');//para p
+        validarYMostrarFormulario('08:00 - 09:00');
     });
     $('#btn_h2').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('09:00 - 10:00'); //para input
+        validarYMostrarFormulario('09:00 - 10:00');
     });
     $('#btn_h3').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('10:00 - 11:00'); //para input
+        validarYMostrarFormulario('10:00 - 11:00');
     });
     $('#btn_h4').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('11:00 - 12:00'); //para input
+        validarYMostrarFormulario('11:00 - 12:00');
     });
     $('#btn_h5').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('13:00 - 14:00'); //para input
+        validarYMostrarFormulario('13:00 - 14:00');
     });
     $('#btn_h6').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('14:00 - 15:00'); //para input
+        validarYMostrarFormulario('14:00 - 15:00');
     });
     $('#btn_h7').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('15:00 - 16:00'); //para input
+        validarYMostrarFormulario('15:00 - 16:00');
     });
     $('#btn_h8').click(function() {
-        $('#modal-reservas').modal('hide');
-        $('#modal-formulario').modal('show');
-        $('#fecha_cita').val(a); //para input
-        $('#hora_cita').val('16:00 - 17:00'); //para input
+        validarYMostrarFormulario('16:00 - 17:00');
     });
+
     $('#regresar').click(function() {
         $('#modal-reservas').modal('show');
         $('#modal-formulario').modal('hide');
     });
 </script>
+
 @endsection

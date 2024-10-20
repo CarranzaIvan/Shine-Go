@@ -99,10 +99,10 @@ class CitaController extends Controller
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
-            'usuario' => $cita->id_usuario
+            'usuario' => $cita->id_usuario,
+            'precio' => $cita->servicio->precio // Precio del servicio
         ]);
     }
-
 
     // Método para eliminar una cita
     public function deleteCita(Request $request)
