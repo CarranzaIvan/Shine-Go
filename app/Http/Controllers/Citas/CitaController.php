@@ -95,7 +95,7 @@ class CitaController extends Controller
         // Devolvemos los detalles de la cita
         return response()->json([
             'id' => $cita->id_cita,
-            'servicio' => $cita->id_servicio,
+            'servicio' => $cita->servicio->nomServicio, // Nombrando la columna en el modelo Servicio
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
