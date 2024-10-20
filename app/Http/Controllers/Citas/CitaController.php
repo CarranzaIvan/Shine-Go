@@ -48,13 +48,21 @@ class CitaController extends Controller
             'hora_cita' => 'required|string|max:100',
         ]);
 
+        // Obtener el servicio con el id proporcionado
+        $servicio = \App\Models\Servicio::find($validatedData['id_servicio']);
+
+        // Verificar si el servicio existe
+        if (!$servicio) {
+            return redirect()->back()->withErrors(['id_servicio' => 'El servicio seleccionado no es válido.']);
+        }
+
         // Crear una nueva cita con los datos validados
         $cita = new Cita();
         $cita->id_usuario = $validatedData['id_usuario']; // Ajusta esto según cómo se guarde el usuario
         $cita->id_servicio = $validatedData['id_servicio'];
         $cita->fecha_cita = $validatedData['fecha_cita'];
         $cita->hora_cita = $validatedData['hora_cita'];
-        $cita->title = $validatedData['id_servicio'];
+        $cita->title = $servicio->nomServicio; // Asigna el nombre del servicio como título
         $cita->color = '#FF0000'; // Color opcional
         $cita->estado = 'pendiente';
         $cita->save();
@@ -65,6 +73,7 @@ class CitaController extends Controller
         // Redirigir a la misma página
         return redirect()->back();
     }
+
     // Método para obtener detalles de una cita
     public function getDetalleCita(Request $request)
     {
@@ -86,7 +95,7 @@ class CitaController extends Controller
         // Devolvemos los detalles de la cita
         return response()->json([
             'id' => $cita->id_cita,
-            'servicio' => $cita->id_servicio,
+            'servicio' => $cita->servicio->nomServicio, // Nombrando la columna en el modelo Servicio
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,

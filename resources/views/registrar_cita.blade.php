@@ -5,65 +5,68 @@
 @section('content')
 
 <style>
-    /* Estilo general para el contenedor del calendario */
-    #calendar-container {
-        background-color: #fdfdfd;
-        border-radius: 20px;
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
-        padding: 40px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 40px;
-    }
+   /* Estilo general para el contenedor del calendario */
+#calendar-container {
+    background-color: #fdfdfd;
+    border-radius: 20px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    padding: 40px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 40px;
+    width: 100%; /* Aseguramos que ocupe todo el ancho */
+}
 
-    /* Efecto de elevación al pasar el ratón */
-    #calendar-container:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
-    }
+/* Efecto de elevación al pasar el ratón */
+#calendar-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+}
 
-    /* Estilo del calendario */
-    #calendar {
-        max-width: 100%;
-        margin: 0 auto;
-        border-radius: 20px;
-        overflow: hidden;
-        background-color: #f9fafb;
-    }
+/* Estilo del calendario */
+#calendar {
+    width: 100% !important; /* Aseguramos que ocupe todo el ancho */
+    max-width: 100% !important; /* Aseguramos que no se limite el ancho máximo */
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #f9fafb;
+}
 
-    /* Estilos para los días de la semana (encabezados) */
-    .fc-day-header {
-        background: linear-gradient(135deg, #ffcc80 0%, #ffa726 100%);
-        color: #2c2c2c;
-        font-weight: bold;
-        padding: 15px;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 14px;
-        border-bottom: 2px solid #e0e0e0;
-    }
+/* Estilos para los días de la semana (encabezados) */
+.fc-day-header {
+    background: linear-gradient(135deg, #ffcc80 0%, #ffa726 100%);
+    color: #2c2c2c;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    border-bottom: 2px solid #e0e0e0;
+}
 
-    /* Estilos para eventos */
-    .fc-event {
-        border-radius: 10px;
-        padding: 10px;
-        font-weight: bold;
-        color: white;
-        text-align: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+/* Estilos para eventos */
+.fc-event {
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-    /* Estilos para el día de hoy */
-    .fc-today {
-        background-color: #ffecb3;
-        border: 2px solid #ffb74d;
-        font-weight: bold;
-    }
+/* Estilos para el día de hoy */
+.fc-today {
+    background-color: #ffecb3;
+    border: 2px solid #ffb74d;
+    font-weight: bold;
+}
+
 </style>
 
 <!--CALENDARIO-->
 <section style="background-color: #f5f5f5;">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <br>
@@ -72,7 +75,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-12">
                 <div id='calendar-container'>
                     <div id='calendar'></div>
                 </div>
@@ -151,18 +154,21 @@
                                 </div>
                             </div>
 
-                            <div class="col-md 6">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for=""><b>Tipo de Servicio</b></label>
                                     <select name="id_servicio" class="form-select" required>
                                         <option value="" selected>Selecciona un servicio</option>
-                                        <!-- Recorremos el array $servicios para generar las opciones -->
-                                        <option value="1">Lavado Premium</option>
-                                        <option value="2">Lavado Express</option>
-                                        <option value="3">Lavado de Motor</option>
+                                        @foreach($servicios as $servicio)
+                                        <option value="{{ $servicio->id }}">{{ $servicio->nomServicio }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
+
+
+
+
                         </div>
 
                         <div class="row">
@@ -363,20 +369,32 @@
                                     text: response.error
                                 });
                             } else {
+                                
                                 // Mostrar los detalles de la cita en SweetAlert (Swal)
                                 Swal.fire({
                                     title: 'Detalles de la Cita',
                                     html: `
-                            <div style="text-align: left;">
-                                <b>Servicio:</b> ${response.title}<br>
-                                <b>Fecha:</b> ${response.fecha}<br>
-                                <b>Hora:</b> ${response.hora}<br>
-                                <b>Usuario:</b> ${response.usuario}<br><br>
-                            </div>
-                            <button id="closeModal" class="btn btn-secondary">Cerrar Ventana</button>
-                            <button id="deleteCita" class="btn btn-danger">Cancelar Cita</button>
-                        `,
-                                    showConfirmButton: false
+                                        <div style="text-align: left;">
+                                            <b>Servicio:</b> ${response.servicio}<br>
+                                            <b>Fecha:</b> ${response.fecha}<br>
+                                            <b>Hora:</b> ${response.hora}<br>
+                                            <b>Usuario:</b> ${response.usuario}<br><br>
+                                        </div>
+                                        <button id="closeModal" class="btn btn-secondary">Cerrar Ventana</button>
+                                        <button id="deleteCita" class="btn btn-danger">Cancelar Cita</button>
+                                        
+                                    `,
+                                    showConfirmButton: false,
+                                    width: 600, // Ancho de la alerta
+                                    padding: "3em", // Relleno
+                                    color: "#716add", // Color del texto
+                                    background: "#fff url(/images/trees.png)", // Fondo personalizado
+                                    backdrop: `
+                                        rgba(0,0,123,0.4)
+                                        url("{{asset('images/nyan-cat-nyan.gif')}}")
+                                        left top
+                                        no-repeat
+                                        `
                                 });
 
                                 // Código adicional para los botones dentro de SweetAlert
@@ -386,6 +404,48 @@
 
                                 document.getElementById('deleteCita').addEventListener('click', function() {
                                     // Lógica para eliminar la cita...
+                                    Swal.fire({
+                                        title: '¿Estás seguro?',
+                                        text: "¡No podrás revertir esto!",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Sí, cancelar cita',
+                                        cancelButtonText: 'No, mantener cita'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $.ajax({
+                                                url: '/citas/eliminar',
+                                                type: 'DELETE',
+                                                data: {
+                                                    id: eventObj.id,
+                                                    _token: '{{ csrf_token() }}'
+                                                },
+                                                success: function(response) {
+                                                    if (response.success) {
+                                                        Swal.fire(
+                                                            '¡Eliminada!',
+                                                            'La cita ha sido cancelada.',
+                                                            'success'
+                                                        ).then(() => {
+                                                            location.reload();
+                                                        });
+                                                    } else {
+                                                        Swal.fire(
+                                                            'Error',
+                                                            'No se pudo cancelar la cita.',
+                                                            'error'
+                                                        );
+                                                    }
+                                                },
+                                                error: function(jqXHR, textStatus, errorThrown) {
+                                                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                                                    Swal.fire('Error', 'Error al cancelar la cita.', 'error');
+                                                }
+                                            });
+                                        }
+                                    });
                                 });
                             }
                         },

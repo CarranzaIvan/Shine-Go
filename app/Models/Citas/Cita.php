@@ -4,6 +4,7 @@ namespace App\Models\Citas;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Servicio;
 
 class Cita extends Model
 {
@@ -35,6 +36,12 @@ class Cita extends Model
         $this->attributes['start'] = $value; // Asigna el mismo valor a 'start'
         $this->attributes['end'] = $value; // Asigna el mismo valor a 'end' (puedes ajustar esto si necesitas otra lógica)
     }
+
+     // Relación con el modelo Servicio
+     public function servicio()
+     {
+         return $this->belongsTo(Servicio::class, 'id_servicio');
+     }
 }
 
 

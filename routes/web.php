@@ -26,16 +26,15 @@ Route::get('/registrar-cita', function () {
 Route::get('dashboard/citas', function () {
     return view('dashboard.citas.index');
 })->name('citas');
-
-
-// Trae los datos de las citas
+//Trae las citas
 Route::get('/citas', [CitaController::class, 'getCitas']);
 //Trea les horas ocupadas
 Route::get('/citas/horas-ocupadas', [CitaController::class, 'getHorasOcupadas']);
 //Guarda la cita
 Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 Route::get('/citas/detalle', [CitaController::class, 'getDetalleCita']); // Nueva ruta para obtener detalles de la cita
-Route::post('/citas/eliminar', [CitaController::class, 'deleteCita']); // Nueva ruta para eliminar la cita
+Route::delete('/citas/eliminar', [CitaController::class, 'deleteCita'])->name('citas.eliminar'); // Nueva ruta para eliminar la cita
+Route::get('/registrar-cita', [ServicioController::class, 'showRegistrarCita'])->name('registrar_cita');
 
 // Rutas para promociones
 Route::get('dashboard/promociones', [PromocionController::class, 'index'])->name('promociones');
