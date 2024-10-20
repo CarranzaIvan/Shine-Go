@@ -6,8 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Citas\Cita;
 use Illuminate\Http\Request;
 
+
 class CitaController extends Controller
 {
+
+    public function index()
+    {
+        // Cargar las citas junto con la relación 'servicio'
+        $citas = Cita::with('servicio')->get();
+        return view('dashboard.citas.index', compact('citas'));
+    }
     public function getCitas()
     {
         // Mapeamos 'id_cita' como 'id' para que FullCalendar lo use como identificador
@@ -99,10 +107,10 @@ class CitaController extends Controller
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
-            'usuario' => $cita->id_usuario
+            'usuario' => $cita->id_usuario,
+            'precio' => $cita->servicio->precio // Precio del servicio
         ]);
     }
-
 
     // Método para eliminar una cita
     public function deleteCita(Request $request)
