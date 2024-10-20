@@ -24,6 +24,10 @@ Route::get('/registrar-cita', function () {
 })->name('registrar_cita');
 //los datos del controlador
 Route::get('/dashboard/citas', [CitaController::class, 'index'])->name('dashboard.citas.index');
+//Los datos de la cita
+Route::get('/dashboard/citas/{id}', [CitaController::class, 'show'])->name('dashboard.citas.show');
+//Elimina la cita
+Route::delete('/dashboard/citas/{id}', [CitaController::class, 'destroy'])->name('dashboard.citas.destroy');
 //Trae las citas
 Route::get('/citas', [CitaController::class, 'getCitas']);
 //Trea les horas ocupadas
