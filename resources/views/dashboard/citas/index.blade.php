@@ -14,7 +14,7 @@
                 <!--<a href="{{ route('crear_promocion') }}" class="btn mb-3 text-white" style="background-color: #0D5C75;">
                     <i class="fa fa-plus"></i> Agregar Cita</a>-->
                 <div class="table-responsive">
-                    <table class="table">
+                    <table id="example" class="table">
                         <thead>
                             <tr>
                                 <th class="text-center">Usuario</th>

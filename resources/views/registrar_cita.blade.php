@@ -8,13 +8,14 @@
     /* Estilo general para el contenedor del calendario */
     #calendar-container {
         background-color: #fdfdfd;
+        /* Fondo más claro */
         border-radius: 20px;
+        /* Bordes más suaves */
         box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+        /* Sombra suave */
         padding: 40px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         margin-bottom: 40px;
-        width: 100%;
-        /* Aseguramos que ocupe todo el ancho */
     }
 
     /* Efecto de elevación al pasar el ratón */
@@ -25,20 +26,20 @@
 
     /* Estilo del calendario */
     #calendar {
-        width: 100% !important;
-        /* Aseguramos que ocupe todo el ancho */
-        max-width: 100% !important;
-        /* Aseguramos que no se limite el ancho máximo */
+        max-width: 100%;
         margin: 0 auto;
         border-radius: 20px;
         overflow: hidden;
         background-color: #f9fafb;
+        /* Fondo más claro */
     }
 
     /* Estilos para los días de la semana (encabezados) */
     .fc-day-header {
         background: linear-gradient(135deg, #ffcc80 0%, #ffa726 100%);
+        /* Gradiente dorado */
         color: #2c2c2c;
+        /* Texto oscuro */
         font-weight: bold;
         padding: 15px;
         text-align: center;
@@ -46,6 +47,23 @@
         letter-spacing: 1px;
         font-size: 14px;
         border-bottom: 2px solid #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Estilos para los días del calendario */
+    .fc-day {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* Efecto de cambio de color y elevación al pasar el ratón */
+    .fc-day:hover {
+        background-color: #fff3e0;
+        /* Suave tono crema */
+        transform: scale(1.02);
+        z-index: 10;
     }
 
     /* Estilos para eventos */
@@ -56,13 +74,75 @@
         color: white;
         text-align: center;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Animación sutil para eventos */
+    .fc-event:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        transform: translateY(-3px);
+    }
+
+    /* Colores degradados para eventos */
+    .fc-event-success {
+        background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+        /* Degradado verde */
+    }
+
+    .fc-event-warning {
+        background: linear-gradient(135deg, #ffca28 0%, #f57f17 100%);
+        /* Degradado dorado */
+    }
+
+    .fc-event-danger {
+        background: linear-gradient(135deg, #ef5350 0%, #d32f2f 100%);
+        /* Degradado rojo */
     }
 
     /* Estilos para el día de hoy */
     .fc-today {
         background-color: #ffecb3;
+        /* Fondo dorado suave para el día actual */
         border: 2px solid #ffb74d;
+        /* Borde dorado */
         font-weight: bold;
+    }
+
+    /* Animación para los días actuales */
+    .fc-today-highlight {
+        animation: pulse 1.5s infinite;
+    }
+
+    /* Animación de pulso para el día actual */
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 183, 77, 0.4);
+        }
+
+        70% {
+            box-shadow: 0 0 0 15px rgba(255, 183, 77, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 183, 77, 0);
+        }
+    }
+
+    /* Ajustes responsivos */
+    @media (max-width: 768px) {
+        #calendar-container {
+            padding: 20px;
+        }
+
+        .fc-day-header {
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .fc-event {
+            padding: 8px;
+            font-size: 12px;
+        }
     }
 </style>
 
