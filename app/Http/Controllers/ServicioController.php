@@ -14,13 +14,23 @@ class ServicioController extends Controller
         return response()->json($servicios);
     }
 
-        // Nuevo método para cargar la vista con todos los servicios
-        public function showRegistrarCita()
-        {
-            // Obtenemos todos los servicios de la base de datos
-            $servicios = Servicio::all();
-    
-            // Retornamos la vista con los servicios
-            return view('registrar_cita', compact('servicios'));
-        }
+    // Nuevo método para cargar la vista con todos los servicios
+    public function showRegistrarCita()
+    {
+        // Obtenemos todos los servicios de la base de datos
+        $servicios = Servicio::all();
+
+        // Retornamos la vista con los servicios
+        return view('registrar_cita', compact('servicios'));
+    }
+
+    // Carga la vista de servicios.
+    public function verServicios(){
+
+        // Obtiene todos los servicios
+        $servicios = Servicio::all();
+
+        // Devuelve la vista y pasa los servicios
+        return view('servicios', compact('servicios'));
+    }
 }

@@ -3,15 +3,15 @@ use App\Http\Controllers\PromocionController;
 use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Citas\CitaController;
+use App\Models\Servicio;
+
 // Ruta de inicio
 Route::get('/', function () {
     return view('welcome');
 })->name('inicio');
 
 // Rutas para los servicios
-Route::get('/servicios', function () {
-    return view('servicios');
-})->name('servicios');
+Route::get('/servicios',[ServicioController::class, 'verServicios'])->name('servicios');
 
 // Ruta para el dashboard
 Route::get('/dashboard', function () {
