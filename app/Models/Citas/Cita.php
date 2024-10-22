@@ -23,6 +23,7 @@ class Cita extends Model
         'end',
         'color',
         'estado',
+        'pagado',
         'fyh_creacion',
         'fyh_actualizacion',
     ];

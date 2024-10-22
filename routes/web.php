@@ -3,6 +3,7 @@ use App\Http\Controllers\PromocionController;
 use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Citas\CitaController;
+use App\Http\Controllers\PaymentController;
 // Ruta de inicio
 Route::get('/', function () {
     return view('welcome');
@@ -35,6 +36,7 @@ Route::get('/citas/horas-ocupadas', [CitaController::class, 'getHorasOcupadas'])
 //Guarda la cita
 Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
 Route::get('/citas/detalle', [CitaController::class, 'getDetalleCita']); // Nueva ruta para obtener detalles de la cita
+Route::get('/citas/detalle-pago/{id}', [CitaController::class, 'getDetalleCitaPago'])->name('citas.detalle-pago');
 Route::delete('/citas/eliminar', [CitaController::class, 'deleteCita'])->name('citas.eliminar'); // Nueva ruta para eliminar la cita
 Route::get('/registrar-cita', [ServicioController::class, 'showRegistrarCita'])->name('registrar_cita');
 
@@ -49,4 +51,7 @@ Route::get('dashboard/promociones/{id}/editar', [PromocionController::class, 'ed
 Route::put('dashboard/promociones/{id}', [PromocionController::class, 'update'])->name('promociones.update');
 Route::delete('dashboard/promociones/{id}', [PromocionController::class, 'destroy'])->name('promociones.destroy');
 Route::get('dashboard/promociones/{id}', [PromocionController::class, 'show'])->name('promociones.show');
+
+Route::post('/stripe-payment', [PaymentController::class, 'stripePayment']);
+Route::get('/payment-return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 
