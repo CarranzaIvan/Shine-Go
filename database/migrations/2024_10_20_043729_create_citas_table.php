@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('citas', function (Blueprint $table) {
             $table->id('id_cita');
             $table->unsignedBigInteger('id_usuario')->nullable();
-            $table->unsignedBigInteger('id_servicio')->nullable();
+            $table->unsignedBigInteger('id_servicio')->nullable(); // Esto debe coincidir con el tipo de 'id' en 'servicios'
             $table->date('fecha_cita');
             $table->string('hora_cita', 100);
             $table->string('title', 100);
@@ -22,20 +22,23 @@ return new class extends Migration
             $table->date('end');
             $table->string('color', 50);
             $table->string('estado', 50);
-            
+            $table->boolean('pagado')->default(false);
+
             // Agregar las columnas de timestamps con nombres personalizados
             $table->timestamp('fyh_creacion')->nullable();
             $table->timestamp('fyh_actualizacion')->nullable();
-        });
-    }
-    
-    
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('citas');
+            // Definir las claves foráneas
+            $table->foreign('id_servicio')
+                ->references('id')
+                ->on('servicios')
+                ->onDelete('set null');
+
+            // Definir la clave foránea de 'id_usuario' si tienes la tabla de usuarios
+            /*$table->foreign('id_usuario')
+                ->references('id')
+                ->on('users')
+                ->onDelete('set null');*/
+        });
     }
 };

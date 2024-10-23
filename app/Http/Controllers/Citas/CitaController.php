@@ -5,9 +5,43 @@ namespace App\Http\Controllers\Citas;
 use App\Http\Controllers\Controller;
 use App\Models\Citas\Cita;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class CitaController extends Controller
 {
+
+    public function index()
+    {
+        // Cargar las citas junto con la relación 'servicio'
+        $citas = Cita::with('servicio')->get();
+        return view('dashboard.citas.index', compact('citas'));
+    }
+    public function show($id)
+    {
+        // Cargar la cita con el servicio y usuario relacionado
+        $cita = Cita::with(['servicio'])->find($id);
+
+        if (!$cita) {
+            return redirect()->back()->withErrors('Cita no encontrada');
+        }
+
+        return view('dashboard.citas.show', compact('cita'));
+    }
+    public function destroy($id)
+    {
+        $cita = Cita::find($id);
+
+        if ($cita) {
+            $cita->delete();
+            return redirect()->route('dashboard.citas.index')->with('success', 'Cita eliminada exitosamente.');
+        } else {
+            return redirect()->route('dashboard.citas.index')->with('error', 'No se pudo encontrar la cita.');
+        }
+    }
+
+
+
     public function getCitas()
     {
         // Mapeamos 'id_cita' como 'id' para que FullCalendar lo use como identificador
@@ -67,11 +101,44 @@ class CitaController extends Controller
         $cita->estado = 'pendiente';
         $cita->save();
 
-        // Flash mensaje de éxito
-        session()->flash('success', 'Cita registrada exitosamente');
+        return response()->json(['success' => true, 'cita_id' => $cita->id_cita]);
+    }
 
-        // Redirigir a la misma página
-        return redirect()->back();
+    public function getDetalleCitaPago($id)
+    {
+        // Verificamos que el ID esté presente
+        $cita = Cita::select(
+            'citas.id_cita',
+            'citas.title',
+            'citas.fecha_cita',
+            'citas.hora_cita',
+            'citas.id_usuario',
+            'servicios.nomServicio',
+            'servicios.precio',
+            'promociones.descuento'
+        )
+            ->join('servicios', 'citas.id_servicio', '=', 'servicios.id')
+            ->leftJoin('promociones', 'servicios.id', '=', 'promociones.servicio_id')
+            ->where('citas.id_cita', $id)
+            ->first();
+
+        // Si no se encuentra la cita, devolvemos un error
+        if (!$cita) {
+            return response()->json(['error' => 'Cita no encontrada'], 404);
+        }
+        // Si no hay promoción, establecemos el descuento a 0
+        $descuento = $cita->descuento ?? 0;
+        // Devolvemos los detalles de la cita
+        return response()->json([
+            'id' => $cita->id_cita,
+            'servicio' => $cita->nomServicio,
+            'title' => $cita->title,
+            'fecha' => $cita->fecha_cita,
+            'hora' => $cita->hora_cita,
+            'usuario' => $cita->id_usuario,
+            'precio' => $cita->precio,
+            'descuento' => $descuento
+        ]);
     }
 
     // Método para obtener detalles de una cita
@@ -84,25 +151,42 @@ class CitaController extends Controller
             return response()->json(['error' => 'No se proporcionó un ID de cita'], 400);
         }
 
-        // Buscamos la cita en la base de datos
-        $cita = Cita::find($id);
+        // Realizamos un INNER JOIN para obtener los detalles de la cita, servicio y promoción
+        $cita = Cita::select(
+            'citas.id_cita',
+            'citas.title',
+            'citas.fecha_cita',
+            'citas.hora_cita',
+            'citas.id_usuario',
+            'servicios.nomServicio',
+            'servicios.precio',
+            'promociones.descuento'
+        )
+            ->join('servicios', 'citas.id_servicio', '=', 'servicios.id')
+            ->leftJoin('promociones', 'servicios.id', '=', 'promociones.servicio_id')
+            ->where('citas.id_cita', $id)
+            ->first();
 
         // Si no se encuentra la cita, devolvemos un error
         if (!$cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
 
+        // Si no hay promoción, establecemos el descuento a 0
+        $descuento = $cita->descuento ?? 0;
+
         // Devolvemos los detalles de la cita
         return response()->json([
             'id' => $cita->id_cita,
-            'servicio' => $cita->servicio->nomServicio, // Nombrando la columna en el modelo Servicio
+            'servicio' => $cita->nomServicio,
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
-            'usuario' => $cita->id_usuario
+            'usuario' => $cita->id_usuario,
+            'precio' => $cita->precio,
+            'descuento' => $descuento
         ]);
     }
-
 
     // Método para eliminar una cita
     public function deleteCita(Request $request)

@@ -136,11 +136,12 @@
                     </li>
 
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                            <i class="flaticon-381-television"></i>
+                            <i class="flaticon-381-calendar"></i>
+
                             <span class="nav-text">Citas</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{{route('citas')}}">Listado de citas</a></li>
+                            <li><a href="{{route('dashboard.citas.index')}}">Listado de citas</a></li>
                         </ul>
                     </li>
                     <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
