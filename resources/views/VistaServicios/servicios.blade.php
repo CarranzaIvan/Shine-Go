@@ -25,7 +25,6 @@
             titulo="{{ $servicio->nomServicio }}" 
             precio="{{ $servicio->precio }}" 
             descripcion="{{ $servicio->descripcion }}" 
-            imagen="{{ $servicio->imagen }}" 
             id_servicio="{{ $servicio->id }}" 
         />
     @endforeach

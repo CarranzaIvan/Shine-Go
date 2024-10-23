@@ -62,7 +62,7 @@
 /* ------------------------------------------------------------- */
 
 /* Botón Ver Carrito */
-.btnVerCarrito {
+.btnVerCarrito, .btnEditarServicio {
     background-color: aliceblue; /* Color de fondo inicial */
     color: black; /* Color del texto */
     border: 0.5px solid black; /* Borde negro */
@@ -70,8 +70,14 @@
 }
 
 /* Efecto al pasar el mouse */
-.btnVerCarrito:hover {
+.btnVerCarrito:hover, .btnEditarServicio:hover {
     background-color: black; /* Cambia el fondo a negro al pasar el mouse */
     color: white; /* Cambia el color del texto a blanco */
+}
+
+.textarea-fixed {
+    width: 100%; /* O el tamaño que desees */
+    height: 150px; /* Altura fija */
+    resize: none; /* Evitar el redimensionamiento */
 }
 

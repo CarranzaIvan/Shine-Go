@@ -10,8 +10,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('inicio');
 
-// Rutas para los servicios
-Route::get('/servicios',[ServicioController::class, 'verServicios'])->name('servicios');
+// Rutas de servicio
+Route::get('/servicios',[ServicioController::class, 'verServicios'])->name('servicios'); // Ver servicios
+Route::get('/servicios/gestion',[ServicioController::class, 'gestionServicios'])->name('gestionervicios'); // Ver servicios a gestionar
+Route::post('/servicios/gestion/guardar',[ServicioController::class, 'guardarServicio'])->name('guardarServicio');
+Route::put('//servicios/gestion/{idServicio}/actualizar',[ServicioController::class, 'actualizarServicio'])->name('actualizarServicio');
+Route::delete('/servicios/gestion/{idServicio}/eliminar',[ServicioController::class, 'eliminarServicio'])->name('eliminarServicio'); // Eliminar servicios
 
 // Ruta para el dashboard
 Route::get('/dashboard', function () {
