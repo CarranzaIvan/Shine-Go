@@ -46,7 +46,7 @@ class CitaController extends Controller
     public function getCitas()
     {
         //eliminamos las citas que no se han pagado
-        Cita::where('pagado', 0)->delete();
+        //Cita::where('pagado', 0)->delete();
         // Mapeamos 'id_cita' como 'id' para que FullCalendar lo use como identificador
         $citas = Cita::select('id_cita as id', 'id_usuario', 'id_servicio', 'title', 'start', 'end', 'color')->get();
 

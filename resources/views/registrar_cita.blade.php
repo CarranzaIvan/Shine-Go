@@ -224,7 +224,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form action="{{ route('citas.store') }}" method="post">
+                    <form id="reservationForm" method="post">
                         @csrf <!-- Este token es obligatorio para las solicitudes POST en Laravel -->
                         <div class="row">
                             <div class="col-md 6">
@@ -823,11 +823,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Configuración de la zona horaria de El Salvador
-            var isAuthenticated = {
-                {
-                    Auth::check() ? 'true' : 'false'
-                }
-            };
+            var isAuthenticated = {{Auth::check() ? 'true' : 'false'}};
             var options = {
                 timeZone: 'America/El_Salvador',
                 hour: '2-digit',
@@ -866,8 +862,8 @@
                 dateClick: function(info) {
 
                     // Verificar si el usuario está autenticado
-                    if (!isAuthenticated) {
-                        Swal.fire({
+                                     if (!isAuthenticated) {
+                            Swal.fire({
                             icon: 'info',
                             title: 'Inicia sesión',
                             text: 'Debes iniciar sesión para reservar una cita.',
@@ -1063,7 +1059,7 @@
                                                         success: function(response) {
                                                             if (response.success) {
                                                                 Swal.fire(
-                                                                    '¡Eliminada!',
+                                                                    '¡Cancelada!',
                                                                     'La cita ha sido cancelada.',
                                                                     'success'
                                                                 ).then(() => {
