@@ -50,13 +50,6 @@
     font-size: 1rem; /* Ajusta el tamaño de la descripción */
 }
 
-.img-servicio {
-    max-width: 150px; /* Ajusta el tamaño máximo según tus necesidades */
-    height: auto;     /* Mantiene la proporción de la imagen */
-    display: block;   /* Para centrarla */
-    margin: 0 auto;  /* Centrar la imagen */
-}
-
 /* ------------------------------------------------------------- */
 /* |        BOTÓN DE VER CARRITO PESPECTIVA DEL CLIENTE        | */
 /* ------------------------------------------------------------- */
@@ -81,3 +74,8 @@
     resize: none; /* Evitar el redimensionamiento */
 }
 
+.img-servicio {
+    width: 100%;
+    height: 50px; /* O el tamaño que prefieras */
+    object-fit: cover;
+}

@@ -5,7 +5,11 @@
             <h6 class="servicio-precio text-secondary" id="precio-{{ $idServicio }}"> $ {{ $precio }}</h6>
             <div class="text-center">
                 <!-- Mostrar la imagen o una imagen por defecto si no hay -->
-                <img src="{{ asset($imagen ? 'storage/' . $imagen : 'images/default.png') }}" class="img-fluid mb-3 img-servicio" alt="{{ $titulo }}" onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}';">
+                <img src="{{ asset($imagen ? 'storage/' . $imagen : 'images/default.png') }}" 
+                     class="img-fluid mb-3 img-servicio" 
+                     alt="{{ $titulo }}" 
+                     onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}';"
+                     style="width: 100%; height: 200px; object-fit: cover;">
             </div>
             <p class="font-weight-normal servicio-descripcion" id="descripcion-{{ $idServicio }}">{{ $descripcion }}</p>
             
