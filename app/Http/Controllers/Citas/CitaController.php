@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Citas\Cita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 
 class CitaController extends Controller
@@ -44,6 +45,8 @@ class CitaController extends Controller
 
     public function getCitas()
     {
+        //eliminamos las citas que no se han pagado
+        Cita::where('pagado', 0)->delete();
         // Mapeamos 'id_cita' como 'id' para que FullCalendar lo use como identificador
         $citas = Cita::select('id_cita as id', 'id_usuario', 'id_servicio', 'title', 'start', 'end', 'color')->get();
 
@@ -147,46 +150,34 @@ class CitaController extends Controller
     public function getDetalleCita(Request $request)
     {
         $id = $request->input('id');
-
+    
         // Verificamos que el ID esté presente
         if (!$id) {
             return response()->json(['error' => 'No se proporcionó un ID de cita'], 400);
         }
-
-        // Realizamos un INNER JOIN para obtener los detalles de la cita, servicio y promoción
-        $cita = Cita::select(
-            'citas.id_cita',
-            'citas.title',
-            'citas.fecha_cita',
-            'citas.hora_cita',
-            'citas.id_usuario',
-            'servicios.nomServicio',
-            'servicios.precio',
-            'promociones.descuento'
-        )
-            ->join('servicios', 'citas.id_servicio', '=', 'servicios.id')
-            ->leftJoin('promociones', 'servicios.id', '=', 'promociones.servicio_id')
-            ->where('citas.id_cita', $id)
-            ->first();
-
+    
+        // Buscamos la cita con el usuario relacionado
+        $cita = Cita::with(['usuario', 'servicio'])->find($id);
+    
         // Si no se encuentra la cita, devolvemos un error
         if (!$cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
-
-        // Si no hay promoción, establecemos el descuento a 0
-        $descuento = $cita->descuento ?? 0;
-
-        // Devolvemos los detalles de la cita
+    
+        // Verificamos si la cita pertenece al usuario autenticado
+        if ($cita->id_usuario !== Auth::id()) {
+            return response()->json(['error' => 'No tienes permiso para ver esta cita.'], 403);
+        }
+    
+        // Devolvemos los detalles de la cita si el usuario tiene permiso
         return response()->json([
             'id' => $cita->id_cita,
-            'servicio' => $cita->nomServicio,
+            'servicio' => $cita->servicio->nomServicio, // Nombrando la columna en el modelo Servicio
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
-            'usuario' => $cita->id_usuario,
-            'precio' => $cita->precio,
-            'descuento' => $descuento
+            'usuario' => $cita->usuario->nombre_completo,
+            'precio' => $cita->servicio->precio // Precio del servicio
         ]);
     }
 

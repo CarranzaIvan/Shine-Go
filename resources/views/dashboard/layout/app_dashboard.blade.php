@@ -1,3 +1,6 @@
+@if(Auth::check() && Auth::user()->id_rol === 1)
+<!-- Mostrar contenido del dashboard -->
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -154,8 +157,18 @@
                     </li>
 
                     <ul style="color: red;" aria-expanded="false">
-                        <li><a href="#">Cerrar Sesion</a></li>
+                        <li>
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Cerrar Sesión
+                            </a>
+                        </li>
                     </ul>
+
+                    <!-- Formulario oculto para cerrar sesión -->
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+
                 </ul>
 
 
@@ -219,8 +232,49 @@
 
     <!-- Dashboard 1 -->
     <script src="{{asset('templates/xhtml/js/dashboard/dashboard-1.js')}}"></script>
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        });
+    </script>
+    @endif
+
+    @if($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ $errors->first() }}",
+                showConfirmButton: true,
+            });
+        });
+    </script>
+    @endif
 
 
 </body>
 
 </html>
+@else
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Acceso Denegado',
+                text: 'No tienes permiso para acceder a esta sección.',
+                confirmButtonText: 'Aceptar'
+            }).then(function() {
+                window.location.replace("{{ route('inicio') }}");
+            });
+        });
+    </script>
+@endif

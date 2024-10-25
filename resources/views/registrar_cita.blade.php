@@ -214,8 +214,7 @@
 </div>
 
 
-
-<!-- Vertically centered modal FORMULARIO -->
+<!-- Modal FORMULARIO -->
 <div class="modal fade" id="modal-formulario" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -225,16 +224,21 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <form method="post" id="reservationForm">
+                    <form action="{{ route('citas.store') }}" method="post">
                         @csrf <!-- Este token es obligatorio para las solicitudes POST en Laravel -->
                         <div class="row">
                             <div class="col-md 6">
                                 <div class="mb-3">
                                     <label><b>Usuario</b></label>
-                                    <input type="text" name="usuario" class="form-control" value="Juan Ernesto Mendez Nerio" readonly>
-                                    <input type="hidden" name="id_usuario" value="1">
+                                    @if(Auth::check())
+                                    <input type="text" name="usuario" class="form-control" value="{{ Auth::user()->nombre_completo }}" readonly>
+                                    <input type="hidden" name="id_usuario" value="{{ Auth::user()->id_usuario }}">
+                                    @else
+                                    <input type="text" class="form-control" value="Usuario no autenticado" readonly>
+                                    @endif
                                 </div>
                             </div>
+
 
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -247,21 +251,17 @@
                                     </select>
                                 </div>
                             </div>
-
-
-
-
                         </div>
 
                         <div class="row">
-                            <div class="col-md 6">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label><b>Fecha de reserva</b></label>
                                     <input type="text" id="fecha_cita" name="fecha_cita" class="form-control" readonly>
                                 </div>
                             </div>
 
-                            <div class="col-md 6">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for=""><b>Hora de reserva</b></label>
                                     <input type="text" id="hora_cita" name="hora_cita" class="form-control" readonly>
@@ -296,8 +296,8 @@
                             </div>
                             <div class="col-md-3" style="text-align: right;">
                                 <p class="form-control-plaintext" id="nom_servicio"></p>
-                                <input type="text" id="name_service" value="">
-                                <input type="text" id="description_service" value="">
+                                <input type="hidden" id="name_service" value="">
+                                <input type="hidden" id="description_service" value="">
                             </div>
                         </div>
                         <div class="row">
@@ -399,7 +399,7 @@
 
                                 <div class="tab-pane fade" id="bitcoin" role="tabpanel" aria-labelledby="bitcoin-tab">
                                     <div class="text-center">
-                                        <p>Para completar en el botón de abajo:</p>
+                                        <p>Para completar haz clic en el botón de abajo:</p>
                                         <!-- logica para pago con criptomonedas -->
                                         <div id="criptoPay"></div>
                                     </div>
@@ -823,6 +823,11 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Configuración de la zona horaria de El Salvador
+            var isAuthenticated = {
+                {
+                    Auth::check() ? 'true' : 'false'
+                }
+            };
             var options = {
                 timeZone: 'America/El_Salvador',
                 hour: '2-digit',
@@ -859,6 +864,21 @@
                 },
                 events: '/citas', // URL a la ruta en Laravel
                 dateClick: function(info) {
+
+                    // Verificar si el usuario está autenticado
+                    if (!isAuthenticated) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Inicia sesión',
+                            text: 'Debes iniciar sesión para reservar una cita.',
+                            confirmButtonText: 'Iniciar sesión'
+                        }).then(() => {
+                            // Redirigir a la página de login (ajusta la ruta si es necesario)
+                            window.location.href = "{{ route('login.form') }}";
+                        });
+                        return; // Salir de la función si el usuario no está autenticado
+                    }
+
                     a = info.dateStr;
                     var selectedDate = new Date(a);
                     var selectedDateFormatted = selectedDate.toISOString().split('T')[0];
@@ -1070,7 +1090,15 @@
                             },
                             error: function(jqXHR, textStatus, errorThrown) {
                                 console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
-                                Swal.fire('Error', 'Error al cargar los detalles de la cita.', 'error');
+                                if (jqXHR.status === 403) {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Acceso Denegado',
+                                        text: 'No tienes permiso para ver los detalles de esta cita.'
+                                    });
+                                } else {
+                                    Swal.fire('Error', 'Error al cargar los detalles de la cita.', 'error');
+                                }
                             }
                         });
                     } else {

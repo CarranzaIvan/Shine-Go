@@ -4,7 +4,32 @@ use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Citas\CitaController;
 use App\Http\Controllers\InicioController;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentController;
+//
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+    // Otras rutas relacionadas con citas aquí
+});
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+});
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/login', [UsuarioController::class, 'showLoginForm'])->name('login.form');
+Route::post('/login', [UsuarioController::class, 'login'])->name('usuario.login');
+
+Route::get('/registro', [UsuarioController::class, 'showRegisterForm'])->name('usuario.register.form');
+Route::post('/registro', [UsuarioController::class, 'register'])->name('usuario.register');
+
+// Ruta de inicio
+Route::get('/', function () {
+    return view('welcome');
+})->name('inicio');
 
 // Rutas de información
 Route::get('/',[InicioController::class, 'welcome'])->name('inicio'); // Ver servicios
