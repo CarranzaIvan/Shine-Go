@@ -8,6 +8,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 
 //
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
+    // Otras rutas relacionadas con citas aquí
+});
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 });

@@ -27,29 +27,57 @@
 <body class="fondo-aqua">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{route('inicio')}}">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" height="50">
-                <b>Shine&Go</b>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav mr-auto">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{route('inicio')}}">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" height="50">
+            <b>Shine&Go</b>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('inicio')}}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('servicios')}}">Servicios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('registrar_cita') }}">Registro de citas</a>
+                </li>
+            </ul>
+            <!-- Usuario autenticado o no autenticado -->
+            <ul class="navbar-nav ml-auto">
+                @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('inicio')}}">Inicio</a>
+                        <a class="nav-link" href="{{ route('login.form') }}">Iniciar Sesión</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('servicios')}}">Servicios</a>
+                        <a class="nav-link" href="{{ route('usuario.register.form') }}">Registrarse</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('registrar_cita') }}">Registro de citas</a>
+                @else
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white;">
+                            {{ Auth::user()->nombre_completo }}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown" style="background-color: #17a2b8; color: white;">
+                            
+                            <a class="dropdown-item text-white" href="{{ route('logout') }}" 
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Cerrar Sesión
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
                     </li>
-                </ul>
-            </div>
+                @endguest
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <!-- Contenido -->
 

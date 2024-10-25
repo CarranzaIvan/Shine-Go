@@ -34,10 +34,10 @@ return new class extends Migration
                 ->onDelete('set null');
 
             // Definir la clave foránea de 'id_usuario' si tienes la tabla de usuarios
-            /*$table->foreign('id_usuario')
-                ->references('id')
-                ->on('users')
-                ->onDelete('set null');*/
+            $table->foreign('id_usuario')
+                ->references('id_usuario')
+                ->on('usuarios')
+                ->onDelete('set null');
         });
     }
 };

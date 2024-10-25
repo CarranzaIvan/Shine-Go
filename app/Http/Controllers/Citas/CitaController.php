@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Citas;
 use App\Http\Controllers\Controller;
 use App\Models\Citas\Cita;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class CitaController extends Controller
@@ -111,31 +112,38 @@ class CitaController extends Controller
     public function getDetalleCita(Request $request)
     {
         $id = $request->input('id');
-
+    
         // Verificamos que el ID esté presente
         if (!$id) {
             return response()->json(['error' => 'No se proporcionó un ID de cita'], 400);
         }
-
-        // Buscamos la cita en la base de datos
-        $cita = Cita::find($id);
-
+    
+        // Buscamos la cita con el usuario relacionado
+        $cita = Cita::with(['usuario', 'servicio'])->find($id);
+    
         // Si no se encuentra la cita, devolvemos un error
         if (!$cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
-
-        // Devolvemos los detalles de la cita
+    
+        // Verificamos si la cita pertenece al usuario autenticado
+        if ($cita->id_usuario !== Auth::id()) {
+            return response()->json(['error' => 'No tienes permiso para ver esta cita.'], 403);
+        }
+    
+        // Devolvemos los detalles de la cita si el usuario tiene permiso
         return response()->json([
             'id' => $cita->id_cita,
             'servicio' => $cita->servicio->nomServicio, // Nombrando la columna en el modelo Servicio
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
-            'usuario' => $cita->id_usuario,
+            'usuario' => $cita->usuario->nombre_completo,
             'precio' => $cita->servicio->precio // Precio del servicio
         ]);
     }
+    
+
 
     // Método para eliminar una cita
     public function deleteCita(Request $request)

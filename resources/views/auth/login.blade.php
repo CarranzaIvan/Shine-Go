@@ -28,16 +28,26 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-8">
-                        <div class="icheck-primary">
-                            <input type="checkbox" id="remember">
-                            <label for="remember">
-                                Recordarme
-                            </label>
-                        </div>
-                    </div>
                     <div class="col-4">
+
+                    </div>
+
+
+
+                    <div class="col-4">
+                        
                         <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+                        <a href="{{ url('/') }}" class="btn btn-danger btn-block">Cancelar</a>
+                        <center>
+                        <a href="{{ route('usuario.register.form') }}" class="btn btn-link">¿No tienes una cuenta? Regístrate</a>
+                        </center>
+                       
+
+                    </div>
+
+
+                    <div class="col-4">
+
                     </div>
                 </div>
             </form>
