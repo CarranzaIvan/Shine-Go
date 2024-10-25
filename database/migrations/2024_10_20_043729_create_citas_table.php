@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('end');
             $table->string('color', 50);
             $table->string('estado', 50);
+            $table->boolean('pagado')->default(false);
 
             // Agregar las columnas de timestamps con nombres personalizados
             $table->timestamp('fyh_creacion')->nullable();
