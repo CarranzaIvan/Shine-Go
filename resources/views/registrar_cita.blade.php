@@ -296,6 +296,8 @@
                             </div>
                             <div class="col-md-3" style="text-align: right;">
                                 <p class="form-control-plaintext" id="nom_servicio"></p>
+                                <input type="text" id="name_service" value="">
+                                <input type="text" id="description_service" value="">
                             </div>
                         </div>
                         <div class="row">
@@ -343,10 +345,7 @@
                                     <a class="nav-link" id="paypal-tab" data-toggle="tab" href="#paypal" role="tab" aria-controls="paypal" aria-selected="false"><i class="bi bi-paypal"></i> PayPal</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="bitcoin-tab" data-toggle="tab" href="#bitcoin" role="tab" aria-controls="bitcoin" aria-selected="false"><i class="fa-brands fa-bitcoin"></i> Bitcoin</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="ethereum-tab" data-toggle="tab" href="#ethereum" role="tab" aria-controls="ethereum" aria-selected="false"><i class="fa-brands fa-ethereum"></i> Ethereum</a>
+                                    <a class="nav-link" id="bitcoin-tab" data-toggle="tab" href="#bitcoin" role="tab" aria-controls="bitcoin" aria-selected="false"><i class="fa-brands fa-bitcoin"></i> Criptomonedas</a>
                                 </li>
                                 <!-- Otros métodos omitidos para simplicidad -->
                             </ul>
@@ -400,16 +399,10 @@
 
                                 <div class="tab-pane fade" id="bitcoin" role="tabpanel" aria-labelledby="bitcoin-tab">
                                     <div class="text-center">
-                                        <p>Para completar el pago con Bitcoin, escanee el siguiente código QR:</p>
-                                        <!-- logica para pago con bitcoin -->
+                                        <p>Para completar en el botón de abajo:</p>
+                                        <!-- logica para pago con criptomonedas -->
+                                        <div id="criptoPay"></div>
                                     </div>
-                                </div>
-                                <div class="tab-pane fade" id="ethereum" role="tabpanel" aria-labelledby="ethereum-tab">
-                                    <div class="text-center">
-                                        <p>Para completar el pago con Ethereum, envíe el monto a la siguiente dirección:</p>
-                                        <!-- logica para pago con ethereum -->
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -469,6 +462,8 @@
                                     console.log(data); // Verificar los datos recibidos
                                     $('#cita_id').val(response.cita_id);
                                     $('#nom_servicio').text(data.servicio);
+                                    $('#name_service').val(data.servicio);
+                                    $('#description_service').val(data.descripcion);
                                     $('#servicio_tt').text('$' + data.precio);
                                     $('#subtotal_servicio').val(data.precio);
                                     if (data.descuento > 0) {
@@ -608,49 +603,201 @@
             }
         });
     </script>
+    <!-- Script para pago con PayPal -->
     <script>
-    $(document).ready(function() {
-        $('#confirmar-cancelacion').click(function() {
-            var citaId = document.getElementById('cita_id').value;
-            
-            $.ajax({
-                url: '/citas/eliminar',
-                type: 'DELETE',
-                data: {
-                    id: citaId,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: '¡Eliminada!',
-                            text: 'La cita ha sido cancelada.',
-                            icon: 'success',
-                            timer: 2000,
-                            showConfirmButton: false
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: document.getElementById('total_a_pagar_hidden').value
                         }
-                        ).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire(
-                            'Error',
-                            'No se pudo cancelar la cita.',
-                            'error'
-                        );
-                    }
-                },
-            });
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Llamar al método payPalPayment en el servidor
+                    $.ajax({
+                        url: '{{ route("payment.paypal") }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            cita_id: document.getElementById('cita_id').value
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Mostrar mensaje de éxito
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Pago completado!',
+                                    text: 'Gracias por su compra.',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = "{{ route('registrar_cita') }}";
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.error,
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Hubo un problema al procesar el pago.',
+                            });
+                        }
+                    });
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+    <!-- Script para pago con criptomonedas usando coinbase -->
+    <script>
+        $('#bitcoin-tab').on('click', function() {
+            pagarCrypto();
         });
 
-        $('#close_delete').click(function() {
-            $('#modal-cancelar-cita').modal('hide');
+        function pagarCrypto() {
+            const apiKey = "{{ env('COINBASE_API') }}";
+            const chargeData = {
+                name: document.getElementById('name_service').value,
+                description: document.getElementById('description_service').value,
+                pricing_type: 'fixed_price',
+                local_price: {
+                    amount: document.getElementById('total_a_pagar_hidden').value,
+                    currency: 'USD'
+                }
+            };
+            fetch('https://api.commerce.coinbase.com/charges/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CC-Api-Key': apiKey
+                    },
+                    body: JSON.stringify(chargeData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.data && data.data.hosted_url) {
+                        $('#criptoPay').html(`<a href="${data.data.hosted_url}" class="btn btn-primary" target="_blank">Pagar con criptomonedas</a>`);
+
+                        // Polling to check the payment status
+                        const chargeId = data.data.id;
+                        const interval = setInterval(() => {
+                            fetch(`https://api.commerce.coinbase.com/charges/${chargeId}`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CC-Api-Key': apiKey
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(chargeData => {
+                                    if (chargeData.data.timeline[0].status === 'COMPLETED') {
+                                        clearInterval(interval);
+
+                                        // Call the callback route after successful payment
+                                        $.ajax({
+                                            url: '{{ route("payment.crypto.callback") }}',
+                                            method: 'POST',
+                                            data: {
+                                                _token: '{{ csrf_token() }}',
+                                                cita_id: document.getElementById('cita_id').value,
+                                                charge_id: chargeId
+                                            },
+                                            success: function(response) {
+                                                if (response.success) {
+                                                    // Mostrar mensaje de éxito
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: '¡Pago completado!',
+                                                        text: 'Gracias por su compra.',
+                                                        timer: 2000,
+                                                        showConfirmButton: false
+                                                    }).then(() => {
+                                                        window.location.href = "{{ route('registrar_cita') }}";
+                                                    });
+                                                } else {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Error',
+                                                        text: response.error,
+                                                    });
+                                                }
+                                            },
+                                            error: function(xhr) {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Error',
+                                                    text: 'Hubo un problema al procesar el pago.',
+                                                });
+                                            }
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                        }, 5000); // Poll every 5 seconds
+                    } else {
+                        $('#criptoPay').html('<p>Hubo un problema al procesar el pago.</p>');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    $('#criptoPay').html('<p>Hubo un problema al procesar el pago.</p>');
+                });
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#confirmar-cancelacion').click(function() {
+                var citaId = document.getElementById('cita_id').value;
+
+                $.ajax({
+                    url: '/citas/eliminar',
+                    type: 'DELETE',
+                    data: {
+                        id: citaId,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: '¡Eliminada!',
+                                text: 'La cita ha sido cancelada.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error',
+                                'No se pudo cancelar la cita.',
+                                'error'
+                            );
+                        }
+                    },
+                });
+            });
+
+            $('#close_delete').click(function() {
+                $('#modal-cancelar-cita').modal('hide');
+            });
+            $('#confim_delete').click(function() {
+                $('#modal-cancelar-cita').modal('show');
+            });
         });
-        $('#confim_delete').click(function() {
-            $('#modal-cancelar-cita').modal('show');
-        });
-    });
-</script>
+    </script>
 
 
 

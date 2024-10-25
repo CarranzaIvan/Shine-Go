@@ -53,5 +53,7 @@ Route::delete('dashboard/promociones/{id}', [PromocionController::class, 'destro
 Route::get('dashboard/promociones/{id}', [PromocionController::class, 'show'])->name('promociones.show');
 
 Route::post('/stripe-payment', [PaymentController::class, 'stripePayment']);
+Route::post('/paypal-payment', [PaymentController::class, 'payPalPayment'])->name('payment.paypal');
+Route::post('/crypto-payment-callback', [PaymentController::class, 'cryptoPaymentCallback'])->name('payment.crypto.callback');
 Route::get('/payment-return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 
