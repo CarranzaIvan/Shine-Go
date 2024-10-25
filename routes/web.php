@@ -3,13 +3,13 @@ use App\Http\Controllers\PromocionController;
 use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Citas\CitaController;
-use App\Models\Servicio;
-
+use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PaymentController;
-// Ruta de inicio
-Route::get('/', function () {
-    return view('welcome');
-})->name('inicio');
+
+// Rutas de información
+Route::get('/',[InicioController::class, 'welcome'])->name('inicio'); // Ver servicios
+Route::get('/terminos',[InicioController::class, 'verTerminos'])->name('verTerminos'); // Ver servicios
+
 
 // Rutas de servicio
 Route::get('/servicios',[ServicioController::class, 'verServicios'])->name('servicios'); // Ver servicios
