@@ -7,10 +7,27 @@ use App\Models\Citas\Cita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Carbon\Carbon;
 
 class CitaController extends Controller
 {
+
+    public function misCitas()
+    {
+        $usuario = Auth::user(); // Obtener usuario autenticado
+
+        // Obtener todas las citas que pertenecen al usuario autenticado, cuya fecha es igual o posterior a la actual, y ordenarlas de la más próxima a la más lejana
+        $citas = Cita::with('servicio')
+            ->where('id_usuario', $usuario->id_usuario)
+            ->where('fecha_cita', '>=', now()->format('Y-m-d')) // Filtrar citas a partir de hoy
+            ->orderBy('fecha_cita', 'asc') // Ordenar por fecha, de la más cercana a la más lejana
+            ->orderBy('hora_cita', 'asc') // Ordenar adicionalmente por hora si hay varias citas el mismo día
+            ->get();
+
+        return view('seguimiento', compact('citas'));
+    }
+
+
 
     public function index()
     {
@@ -18,6 +35,7 @@ class CitaController extends Controller
         $citas = Cita::with('servicio')->get();
         return view('dashboard.citas.index', compact('citas'));
     }
+
     public function show($id)
     {
         // Cargar la cita con el servicio y usuario relacionado
@@ -29,6 +47,7 @@ class CitaController extends Controller
 
         return view('dashboard.citas.show', compact('cita'));
     }
+
     public function destroy($id)
     {
         $cita = Cita::find($id);
@@ -41,8 +60,6 @@ class CitaController extends Controller
         }
     }
 
-
-
     public function getCitas()
     {
         //eliminamos las citas que no se han pagado
@@ -53,7 +70,6 @@ class CitaController extends Controller
         // Devolvemos las citas en formato JSON para FullCalendar
         return response()->json($citas);
     }
-
 
     public function getHorasOcupadas(Request $request)
     {
@@ -101,7 +117,7 @@ class CitaController extends Controller
         $cita->hora_cita = $validatedData['hora_cita'];
         $cita->title = $servicio->nomServicio; // Asigna el nombre del servicio como título
         $cita->color = '#FF0000'; // Color opcional
-        $cita->estado = 'pendiente';
+        $cita->estado = 'En proceso';
         $cita->save();
 
         return response()->json(['success' => true, 'cita_id' => $cita->id_cita]);
@@ -130,8 +146,10 @@ class CitaController extends Controller
         if (!$cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
+
         // Si no hay promoción, establecemos el descuento a 0
         $descuento = $cita->descuento ?? 0;
+
         // Devolvemos los detalles de la cita
         return response()->json([
             'id' => $cita->id_cita,
@@ -146,42 +164,36 @@ class CitaController extends Controller
         ]);
     }
 
-    // Método para obtener detalles de una cita
     public function getDetalleCita(Request $request)
     {
         $id = $request->input('id');
-    
-        // Verificamos que el ID esté presente
+
         if (!$id) {
             return response()->json(['error' => 'No se proporcionó un ID de cita'], 400);
         }
-    
-        // Buscamos la cita con el usuario relacionado
+
         $cita = Cita::with(['usuario', 'servicio'])->find($id);
-    
-        // Si no se encuentra la cita, devolvemos un error
+
         if (!$cita) {
             return response()->json(['error' => 'Cita no encontrada'], 404);
         }
-    
-        // Verificamos si la cita pertenece al usuario autenticado
+
         if ($cita->id_usuario !== Auth::id()) {
             return response()->json(['error' => 'No tienes permiso para ver esta cita.'], 403);
         }
-    
-        // Devolvemos los detalles de la cita si el usuario tiene permiso
+
         return response()->json([
             'id' => $cita->id_cita,
-            'servicio' => $cita->servicio->nomServicio, // Nombrando la columna en el modelo Servicio
+            'servicio' => $cita->servicio->nomServicio,
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
             'usuario' => $cita->usuario->nombre_completo,
-            'precio' => $cita->servicio->precio // Precio del servicio
+            'precio' => $cita->servicio->precio,
+            'estado' => $cita->estado
         ]);
     }
 
-    // Método para eliminar una cita
     public function deleteCita(Request $request)
     {
         $id = $request->input('id');

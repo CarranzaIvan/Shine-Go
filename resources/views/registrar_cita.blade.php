@@ -986,7 +986,7 @@
                                     Swal.fire({
                                         title: 'Detalles de la Cita',
                                         html: `
-                                    <div style="text-align: left;">
+                                    <div style="text-align: center;">
                                         <b>Servicio:</b> ${response.servicio}<br>
                                         <b>Fecha:</b> ${response.fecha}<br>
                                         <b>Hora:</b> ${response.hora}<br>
