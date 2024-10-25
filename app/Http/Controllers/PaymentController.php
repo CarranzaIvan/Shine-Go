@@ -44,23 +44,43 @@ class PaymentController extends Controller
     }
     public function payPalPayment(Request $request)
     {
-        // PayPal payment logic
-        // Update the appointment status
-        // $this->actualizarCita($request->cita_id);
+        // Lógica para manejar el pago con PayPal
+        try {
+            // Actualizar el estado de la cita
+            $this->actualizarCita($request->cita_id);
+            return response()->json(['success' => true]);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
-    public function bitcoinPayment(Request $request)
+    // Método para manejar el callback de pagos de criptomonedas
+    public function cryptoPaymentCallback(Request $request)
     {
-        // Lógica para manejar el pago con Coinbase
-        // Verificar el pago y actualizar el estado de la cita
-        // $this->actualizarCita($request->cita_id);
-    }
+        try {
+            $chargeId = $request->input('charge_id');
+            $apiKey = env('COINBASE_API');
 
-    public function ethereumPayment(Request $request)
-    {
-        // Lógica para manejar el pago con Bitcoin/Ethereum
-        // Verificar el pago y actualizar el estado de la cita
-        // $this->actualizarCita($request->cita_id);
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('GET', "https://api.commerce.coinbase.com/charges/{$chargeId}", [
+                'headers' => [
+                    'X-CC-Api-Key' => $apiKey,
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            $chargeData = json_decode($response->getBody(), true);
+
+            if ($chargeData['data']['timeline'][0]['status'] === 'COMPLETED') {
+                $cita_id = $request->input('cita_id');
+                $this->actualizarCita($cita_id);
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['error' => 'Payment not completed']);
+            }
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     public function paymentReturn()

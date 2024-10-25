@@ -114,6 +114,7 @@ class CitaController extends Controller
             'citas.hora_cita',
             'citas.id_usuario',
             'servicios.nomServicio',
+            'servicios.descripcion',
             'servicios.precio',
             'promociones.descuento'
         )
@@ -132,6 +133,7 @@ class CitaController extends Controller
         return response()->json([
             'id' => $cita->id_cita,
             'servicio' => $cita->nomServicio,
+            'descripcion' => $cita->descripcion,
             'title' => $cita->title,
             'fecha' => $cita->fecha_cita,
             'hora' => $cita->hora_cita,
