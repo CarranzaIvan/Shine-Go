@@ -31,7 +31,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="descuento"><strong>Descuento (%)</strong></label>
-                        <input type="number" class="form-control" id="descuento" name="descuento" value="{{ $promocion->descuento }}" required>
+                        <input type="number" class="form-control" id="descuento" name="descuento" value="{{ $promocion->descuento }}" required min="5" max="50">
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="fecha_expiracion"><strong>Fecha de Expiración</strong></label>
-                        <input type="date" class="form-control" id="fecha_expiracion" name="fecha_expiracion" value="{{ $promocion->fecha_expiracion }}" required>
+                        <input type="date" class="form-control" id="fecha_expiracion" name="fecha_expiracion" value="{{ $promocion->fecha_expiracion }}" required min="{{ date('Y-m-d') }}">
                     </div>
                 </div>
             </div>

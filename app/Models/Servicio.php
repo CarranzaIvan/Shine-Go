@@ -16,10 +16,9 @@ class Servicio extends Model
         'precio',
     ];
 
-    // Define any relationships if necessary
-    // For example, if a Servicio has many Promociones:
-    // public function promociones()
-    // {
-    //     return $this->hasMany(Promocion::class);
-    // }
+    // Define the relationship with the model Promocion
+    public function promocion()
+    {
+        return $this->hasOne(Promocion::class);
+    }
 }

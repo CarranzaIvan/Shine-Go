@@ -30,7 +30,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="descuento"><strong>Descuento (%)</strong></label>
-                        <input type="number" class="form-control" id="descuento" name="descuento" required>
+                        <input type="number" class="form-control" id="descuento" name="descuento" required min="5" max="50">
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="fecha_expiracion"><strong>Fecha de Expiración</strong></label>
-                        <input type="date" class="form-control" id="fecha_expiracion" name="fecha_expiracion" required>
+                        <input type="date" class="form-control" id="fecha_expiracion" name="fecha_expiracion" required min="{{ date('Y-m-d') }}">
                     </div>
                 </div>
             </div>
@@ -95,6 +95,13 @@
                             li.textContent = servicio.nomServicio;
                             li.dataset.id = servicio.id;
                             servicioList.appendChild(li);
+                            if(servicioInput.value === servicio.nomServicio) {
+                                servicioIdInput.value = servicio.id;
+                                selectedFromList = true;
+                                servicioList.innerHTML = '';
+                            }else {
+                                servicioIdInput.value = '';
+                            }
                         });
                     });
             } else {

@@ -10,7 +10,12 @@ class ServicioController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $servicios = Servicio::where('nomServicio', 'LIKE', "%{$query}%")->get();
+
+        // Fetch services that do not have an associated promotion
+        $servicios = Servicio::where('nomServicio', 'LIKE', "%{$query}%")
+            ->whereDoesntHave('promocion')
+            ->get();
+
         return response()->json($servicios);
     }
 
