@@ -17,4 +17,10 @@ class InicioController extends Controller
     {
         return view('terminos');
     }
+
+    // Vísta de terminos
+    public function verChatbot()
+    {
+        return view('chatbot');
+    }
 }

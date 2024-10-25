@@ -32,9 +32,9 @@ Route::get('/', function () {
 })->name('inicio');
 
 // Rutas de información
-Route::get('/',[InicioController::class, 'welcome'])->name('inicio'); // Ver servicios
-Route::get('/terminos',[InicioController::class, 'verTerminos'])->name('verTerminos'); // Ver servicios
-
+Route::get('/',[InicioController::class, 'welcome'])->name('inicio'); // Ver inicio
+Route::get('/terminos',[InicioController::class, 'verTerminos'])->name('verTerminos'); // Ver terminos y condiciones
+Route::get('/chatbot',[InicioController::class, 'verChatbot'])->name('verChatbot'); // Ver terminos y condiciones
 
 // Rutas de servicio
 Route::get('/servicios',[ServicioController::class, 'verServicios'])->name('servicios'); // Ver servicios
