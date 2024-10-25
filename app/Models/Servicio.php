@@ -14,6 +14,7 @@ class Servicio extends Model
         'nomServicio',
         'descripcion',
         'precio',
+        'imagen', // Recebimiento de la imagen
     ];
 
     // Define the relationship with the model Promocion

@@ -5,7 +5,7 @@
             <h5 class="card-title font-weight-bold servicio-titulo">{{ $titulo }}</h5>
             <h6 class="servicio-precio text-secondary"> $ {{ $precio }}</h6>
             <div class="text-center">
-                <img src="{{ asset($imagen) }}" class="img-fluid mb-3 img-servicio" alt="{{ $titulo }}" onerror="this.onerror=null; this.src='images/logo.png';">
+                <img src="{{ asset($imagen ? 'storage/' . $imagen : 'images/default.png') }}" class="img-fluid mb-3 img-servicio" alt="{{ $titulo }}" onerror="this.onerror=null; this.src='{{ asset('images/logo.png') }}';">
             </div>
             <p class="font-weight-normal servicio-descripcion">{{ $descripcion }}</p>
             <button class="btn btn-agregar" data-id="{{ $idServicio }}">

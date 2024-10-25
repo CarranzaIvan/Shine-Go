@@ -26,7 +26,8 @@
             precio="{{ $servicio->precio }}" 
             descripcion="{{ $servicio->descripcion }}" 
             id_servicio="{{ $servicio->id }}" 
-        />
+            imagen="{{ $servicio->imagen ?? 'images/default.png' }}" />
+
     @endforeach
     
     </div>

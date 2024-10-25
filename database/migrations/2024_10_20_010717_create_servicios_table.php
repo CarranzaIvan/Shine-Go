@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nomServicio');
             $table->text('descripcion')->nullable();
             $table->decimal('precio', 10, 2);
+            $table->string('imagen')->nullable(); // Agrega esta línea
             $table->timestamps();
         });
     }
