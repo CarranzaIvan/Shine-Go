@@ -864,13 +864,10 @@
                     // Verificar si el usuario está autenticado
                     if (isAuthenticated !== 'true') {
                         Swal.fire({
-                            icon: 'info',
-                            title: 'Inicia sesión',
-                            text: 'Debes iniciar sesión para reservar una cita.',
-                            confirmButtonText: 'Iniciar sesión'
-                        }).then(() => {
-                            // Redirigir a la página de login (ajusta la ruta si es necesario)
-                            window.location.href = "{{ route('login.form') }}";
+                            icon: "warning",
+                            title: "Oops...",
+                            text: "Debes iniciar sesión para reservar una cita",
+                            footer: `<a href="{{ route('login.form') }}">¿Ya tienes una cuenta? Inicia Sesión</a>`,
                         });
                         return; // Salir de la función si el usuario no está autenticado
                     }
@@ -982,36 +979,36 @@
                                     });
                                 } else {
 
-                                    // Mostrar los detalles de la cita en SweetAlert (Swal)
+
+
                                     Swal.fire({
+                                        icon: 'info',
                                         title: 'Detalles de la Cita',
                                         html: `
-                                    <div style="text-align: left;">
-                                        <b>Servicio:</b> ${response.servicio}<br>
-                                        <b>Fecha:</b> ${response.fecha}<br>
-                                        <b>Hora:</b> ${response.hora}<br>
-                                        <b>Usuario:</b> ${response.usuario}<br><br>
-                                    </div>
-                                    <button id="closeModal" class="btn btn-secondary">Cerrar Ventana</button>
-                                    <button id="deleteCita" class="btn btn-danger">Cancelar Cita</button>
-                                    
-                                `,
+                                            <div style="text-align: center; font-size: 16px; line-height: 1.6;">
+                                            <b>Usuario:</b> ${response.usuario}<br>
+                                                <b>Servicio:</b> ${response.servicio}<br>
+                                                <b>Fecha:</b> ${response.fecha}<br>
+                                                <b>Hora:</b> ${response.hora}<br>
+                                            </div>
+                                            <div style="margin-top: 20px; text-align: center;">
+                                                
+                                                <button id="deleteCita" class="btn btn-danger">Cancelar Cita</button>
+                                            </div>
+                                        `,
                                         showConfirmButton: false,
-                                        width: 600, // Ancho de la alerta
-                                        padding: "3em", // Relleno
-                                        color: "#716add", // Color del texto
-                                        background: "#fff url(/images/trees.png)", // Fondo personalizado
+                                        width: 500,
+                                        padding: '2em',
+                                        background: '#fff',
+                                        customClass: {
+                                            popup: 'custom-swal-popup'
+                                        },
                                         backdrop: `
-                                    rgba(0,0,123,0.4)
-                                    url("{{asset('images/nyan-cat-nyan.gif')}}")
-                                    left top
-                                    no-repeat
+                                        rgba(0,0,123,0.2)
+                                        url("{{asset('images/nyan-cat-nyan.gif')}}")
+                                        left top
+                                        no-repeat
                                     `
-                                    });
-
-                                    // Código adicional para los botones dentro de SweetAlert
-                                    document.getElementById('closeModal').addEventListener('click', function() {
-                                        Swal.close();
                                     });
 
                                     document.getElementById('deleteCita').addEventListener('click', function() {
@@ -1050,11 +1047,14 @@
                                                         },
                                                         success: function(response) {
                                                             if (response.success) {
-                                                                Swal.fire(
-                                                                    '¡Eliminada!',
-                                                                    'La cita ha sido cancelada.',
-                                                                    'success'
-                                                                ).then(() => {
+                                                                Swal.fire({
+                                                                    position: "top-center",
+                                                                    icon: "success",
+                                                                    title: "Cancelada ",
+                                                                    text: '¡La cita ha sido cancelada!',
+                                                                    showConfirmButton: false,   
+                                                                    timer: 2000
+                                                                }).then(() => {
                                                                     location.reload();
                                                                 });
                                                             } else {

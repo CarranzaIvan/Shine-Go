@@ -29,24 +29,20 @@ class Cita extends Model
         'fyh_actualizacion',
     ];
 
-    public $timestamps = false; // Deshabilita las marcas de tiempo automáticas
+    public $timestamps = false;
 
-    // Mutator para asegurarse de que el campo 'start' sea igual a 'fecha_cita'
     public function setFechaCitaAttribute($value)
     {
         $this->attributes['fecha_cita'] = $value;
-        $this->attributes['start'] = $value; // Asigna el mismo valor a 'start'
-        $this->attributes['end'] = $value; // Asigna el mismo valor a 'end' (puedes ajustar esto si necesitas otra lógica)
+        $this->attributes['start'] = $value;
+        $this->attributes['end'] = $value;
     }
 
-    // Relación con el modelo Servicio
     public function servicio()
     {
         return $this->belongsTo(Servicio::class, 'id_servicio', 'id');
     }
 
-    // Relación con el modelo Usuario
-    // Relación con el modelo Usuario
     public function usuario()
     {
         return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');

@@ -85,34 +85,24 @@
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <div class="header-info">
-                                        <span>David Morse</span>
-                                        <small>ADMIN</small>
+                                        <!-- Mostramos el nombre del usuario autenticado -->
+                                        <span>{{ Auth::user()->nombre_completo }}</span>
+                                        <small>{{ Auth::user()->id_rol === 1 ? 'ADMIN' : 'USER' }}</small>
                                     </div>
-                                    <img src="images/profile/pic1.jpg" width="20" alt="" />
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item ai-icon">
-                                        <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="12" cy="7" r="4"></circle>
-                                        </svg>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item ai-icon">
-                                        <svg id="icon-inbox" xmlns="http://www.w3.org/2000/svg" class="text-success" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                            <polyline points="22,6 12,13 2,6"></polyline>
-                                        </svg>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item ai-icon">
+                                    <a href="{{ route('logout') }}" class="dropdown-item ai-icon"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                                             <polyline points="16 17 21 12 16 7"></polyline>
                                             <line x1="21" y1="12" x2="9" y2="12"></line>
                                         </svg>
-                                        <span class="ml-2">Logout </span>
+                                        <span class="ml-2">Cerrar Sesión</span>
                                     </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
                                 </div>
                             </li>
                         </ul>
@@ -120,6 +110,7 @@
                 </nav>
             </div>
         </div>
+
         <!--**********************************
             Header end ti-comment-alt
         ***********************************-->
@@ -158,26 +149,50 @@
 
                     <ul style="color: red;" aria-expanded="false">
                         <li>
-                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="logout-btn">
+                                <i class="bi bi-box-arrow-right"></i> <!-- Ícono de Bootstrap Icons -->
                                 Cerrar Sesión
                             </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
-
-                    <!-- Formulario oculto para cerrar sesión -->
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-
                 </ul>
 
 
                 <div class="copyright">
-                    <p><strong>Shine&Go</strong> © 2024 All Rights Reserved</p>
-                    <p>Made by Grupo## - CET115</p>
+                    <p><strong>Shine&Go</strong> © 2024 Todos los derechos Reservados</p>
                 </div>
             </div>
         </div>
+
+        <style>
+            .logout-btn {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                color: #dc3545;
+                /* Color rojo para destacar */
+                font-weight: bold;
+                transition: background-color 0.3s, color 0.3s;
+                border-radius: 5px;
+                /* Bordes redondeados */
+            }
+
+            .logout-btn i {
+                margin-right: 8px;
+                /* Espacio entre el ícono y el texto */
+                font-size: 1.2rem;
+            }
+
+            .logout-btn:hover {
+                background-color: #f8d7da;
+                /* Fondo rojo claro al pasar el mouse */
+                color: #721c24;
+                /* Cambiar el color del texto al pasar el mouse */
+            }
+        </style>
         <!--**********************************
             Sidebar end
         ***********************************-->
@@ -203,7 +218,7 @@
         ***********************************-->
     <div class="footer">
         <div class="copyright">
-            <p>Copyright © Designed &amp; Developed by <a href="http://dexignzone.com/" target="_blank">DexignZone</a> 2020</p>
+            <p><strong>Shine&Go</strong> © 2024 Todos los Derechos Reservados</p>
         </div>
     </div>
     <!--**********************************
@@ -264,17 +279,17 @@
 
 </html>
 @else
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            Swal.fire({
-                icon: 'error',
-                title: 'Acceso Denegado',
-                text: 'No tienes permiso para acceder a esta sección.',
-                confirmButtonText: 'Aceptar'
-            }).then(function() {
-                window.location.replace("{{ route('inicio') }}");
-            });
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso Denegado',
+            text: 'No tienes permiso para acceder a esta sección.',
+            confirmButtonText: 'Aceptar'
+        }).then(function() {
+            window.location.replace("{{ route('inicio') }}");
         });
-    </script>
+    });
+</script>
 @endif

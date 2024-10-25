@@ -8,7 +8,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header" style="background-color: #0D5C75;">
-                <h4 class="card-title text-white">Listado de servicios</h4>
+                <h4 class="card-title text-white">Listado de Citas</h4>
             </div>
             <div class="card-body">
                 <!--<a href="{{ route('crear_promocion') }}" class="btn mb-3 text-white" style="background-color: #0D5C75;">
@@ -56,7 +56,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    ¿Estás seguro de que deseas eliminar esta promoción?
+                                    ¿Estás seguro de que deseas eliminar esta cita?
                                 </div>
                                 <div class="modal-footer">
                                     <form id="deleteForm" method="POST" action="">

@@ -1,59 +1,47 @@
 @extends('layout.app')
 
 @section('content')
-<div class="login-box">
-    <div class="login-logo">
-        <a href="#"><b>Shine&Go</b> Login</a>
-    </div>
-    <div class="card">
-        <div class="card-body login-card-body">
-            <p class="login-box-msg">Inicia sesión para continuar</p>
-
-            <form action="{{ route('usuario.login') }}" method="POST">
-                @csrf
-                <div class="input-group mb-3">
-                    <input type="email" name="correo" class="form-control" placeholder="Correo" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
+<link href="{{asset('templates/xhtml/css/style.css')}}" rel="stylesheet">
+<div class="authincation d-flex align-items-center justify-content-center" style="height: 80vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="authincation-content">
+                    <div class="row no-gutters">
+                        <div class="col-md-5 d-none d-md-flex align-items-center justify-content-center pl-5">
+                            <img src="{{ asset('images/logo.png') }}" alt="Login Image" class="img-fluid mb-4">
+                        </div>
+                        <div class="col-md-7">
+                            <div class="auth-form">
+                                <h3 class="text-center mb-4">Iniciar sesión</h3>
+                                <form action="{{ route('usuario.login') }}" method="POST">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label class="mb-1"><strong>Correo</strong></label>
+                                        <input type="email" name="correo" class="form-control" placeholder="correo" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="mb-1"><strong>Contraseña</strong></label>
+                                        <input type="password" name="password" class="form-control" required>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                                    </div>
+                                </form>
+                                <div class="new-account mt-3 text-center">
+                                    <p>No tienes cuenta? <a class="text-primary" href="{{ route('usuario.register.form') }}">Registrate</a></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-lock"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-
-                    </div>
-
-
-
-                    <div class="col-4">
-                        
-                        <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
-                        <a href="{{ url('/') }}" class="btn btn-danger btn-block">Cancelar</a>
-                        <center>
-                        <a href="{{ route('usuario.register.form') }}" class="btn btn-link">¿No tienes una cuenta? Regístrate</a>
-                        </center>
-                       
-
-                    </div>
-
-
-                    <div class="col-4">
-
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
 @if(session('success'))
 <script>
     Swal.fire({
@@ -77,20 +65,6 @@
 </script>
 @endif
 
-@if(session('success'))
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire({
-            icon: 'success',
-            title: 'Éxito',
-            text: "{{ session('success') }}",
-            showConfirmButton: false,
-            timer: 3000
-        });
-    });
-</script>
-@endif
-
 @if($errors->any())
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -103,6 +77,5 @@
     });
 </script>
 @endif
-
 
 @endsection
