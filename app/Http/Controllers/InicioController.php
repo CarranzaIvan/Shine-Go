@@ -23,4 +23,10 @@ class InicioController extends Controller
     {
         return view('chatbot');
     }
+
+    // Vísta de Preguntas Frecuentes
+    public function verPreguntas()
+    {
+        return view('preguntas');
+    }
 }
