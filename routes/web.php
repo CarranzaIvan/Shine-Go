@@ -7,7 +7,13 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentController;
-//
+use App\Http\Controllers\DashboardController;
+
+Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+// Rutas para el seguimiento de citas
+Route::middleware(['auth'])->group(function () {
+    Route::get('/mis-citas', [CitaController::class, 'misCitas'])->name('seguimiento');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/citas', [CitaController::class, 'store'])->name('citas.store');
