@@ -864,13 +864,10 @@
                     // Verificar si el usuario está autenticado
                     if (isAuthenticated !== 'true') {
                         Swal.fire({
-                            icon: 'info',
-                            title: 'Inicia sesión',
-                            text: 'Debes iniciar sesión para reservar una cita.',
-                            confirmButtonText: 'Iniciar sesión'
-                        }).then(() => {
-                            // Redirigir a la página de login (ajusta la ruta si es necesario)
-                            window.location.href = "{{ route('login.form') }}";
+                            icon: "warning",
+                            title: "Oops...",
+                            text: "Debes iniciar sesión para reservar una cita",
+                            footer: `<a href="{{ route('login.form') }}">¿Ya tienes una cuenta? Inicia Sesión</a>`,
                         });
                         return; // Salir de la función si el usuario no está autenticado
                     }
