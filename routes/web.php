@@ -3,12 +3,12 @@ use App\Http\Controllers\PromocionController;
 use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Citas\CitaController;
-use App\Http\Controllers\InicioController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 // Rutas para el seguimiento de citas
@@ -38,10 +38,10 @@ Route::get('/', function () {
 })->name('inicio');
 
 // Rutas de información
-Route::get('/',[InicioController::class, 'welcome'])->name('inicio'); // Ver inicio
-Route::get('/terminos',[InicioController::class, 'verTerminos'])->name('verTerminos'); // Ver terminos y condiciones
-Route::get('/chatbot',[InicioController::class, 'verChatbot'])->name('verChatbot'); // Ver terminos y condiciones
-Route::get('/preguntas',[InicioController::class, 'verPreguntas'])->name('verPreguntas'); // Ver terminos y condiciones
+Route::get('/',[HomeController::class, 'welcome'])->name('inicio'); // Ver inicio
+Route::get('/terminos',[HomeController::class, 'verTerminos'])->name('verTerminos'); // Ver terminos y condiciones
+Route::get('/chatbot',[HomeController::class, 'verChatbot'])->name('verChatbot'); // Ver terminos y condiciones
+Route::get('/preguntas',[HomeController::class, 'verPreguntas'])->name('verPreguntas'); // Ver terminos y condiciones
 
 // Rutas de servicio
 Route::get('/servicios',[ServicioController::class, 'verServicios'])->name('servicios'); // Ver servicios

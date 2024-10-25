@@ -21,36 +21,31 @@
     </div>
 
     <div class="container text-center">
-        
         <div class="row">
             <!-- Columna 1 -->
             <div class="col-md-6">
-                <div class="mb-4">
-                    <p class="font-weight-bold">¿Cómo puedo registrarme?</p>
-                    <p>Para registrarte, haz clic en el botón "Registrarse" en la página de inicio y sigue los pasos.</p>
-                </div>
-                <hr>
-                
-                <div class="mb-4">
-                    <p class="font-weight-bold">¿Dónde puedo ver mis reservas?</p>
-                    <p>Dirígete a tu perfil y selecciona "Mis reservas" para ver el historial.</p>
-                </div>
-                <hr>
+                @foreach($preguntas as $index => $pregunta)
+                    @if($index % 2 == 0) <!-- Columna izquierda -->
+                        <div class="mb-4">
+                            <h4 class="text-black font-weight-black mb-1">{{ $pregunta->pregunta }}</h4>
+                            <h5 class="text-black font-weight-light mb-4">{{ $pregunta->respuesta }}</h5>
+                        </div>
+                        <hr>
+                    @endif
+                @endforeach
             </div>
 
             <!-- Columna 2 -->
             <div class="col-md-6">
-                <div class="mb-4">
-                    <p class="font-weight-bold">¿Olvidé mi contraseña, cómo la recupero?</p>
-                    <p>Haz clic en "Olvidé mi contraseña" en la página de inicio de sesión y sigue las instrucciones.</p>
-                </div>
-                <hr>
-                
-                <div class="mb-4">
-                    <p class="font-weight-bold">¿Cómo contacto al soporte técnico?</p>
-                    <p>Puedes contactar al soporte técnico enviando un mensaje a través de la sección de "Contacto".</p>
-                </div>
-                <hr>
+                @foreach($preguntas as $index => $pregunta)
+                    @if($index % 2 != 0) <!-- Columna derecha -->
+                        <div class="mb-4">
+                            <h4 class="text-black font-weight-black mb-1" class="font-weight-bold">{{ $pregunta->pregunta }}</h4>
+                            <h5 class="text-black font-weight-light mb-4">{{ $pregunta->respuesta }}</h5>
+                        </div>
+                        <hr>
+                    @endif
+                @endforeach
             </div>
         </div>
     </div>
