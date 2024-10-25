@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title', 'Servicios')
+@section('title', 'Servicios || Gestión')
 
 @section('custom_css')
     <link rel="stylesheet" href="{{ asset('css/styleServicio.css') }}">
@@ -43,20 +43,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="nuevoServicioForm" action="/servicios/gestion/guardar" method="POST" enctype="multipart/form-data">
+                <form id="nuevoServicioForm" action="/servicios/gestion/guardar" method="POST" enctype="multipart/form-data" novalidate>
                     @csrf
                     <div class="mb-3">
-                        <label for="titulo" class="form-label">Nombre del Servicio</label>
+                        <label for="nomServicio" class="form-label">Nombre del Servicio</label>
                         <input type="text" class="form-control" id="nomServicio" name="nomServicio" placeholder="Ingrese el nombre del servicio..." required>
+                        <div class="invalid-feedback">
+                            El nombre del servicio es obligatorio.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="precio" class="form-label">Precio del Servicio</label>
-                        <!-- Agregar step="0.01" para permitir decimales y min="0" para no permitir menores a 0 -->
                         <input type="number" class="form-control" id="precio" name="precio" placeholder="Ingrese el precio del servicio..." step="0.01" min="0" required>
+                        <div class="invalid-feedback">
+                            El precio del servicio es obligatorio y debe ser un valor positivo a dos decimales.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="descripcion" class="form-label">Descripción</label>
-                        <textarea class="form-control textarea-fixed" id="descripcion" name="descripcion" placeholder="Ingrese la descripción del servicio..." required></textarea>
+                        <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Ingrese la descripción del servicio..." required></textarea>
+                        <div class="invalid-feedback">
+                            La descripción del servicio es obligatoria.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="imagen" class="form-label">Imagen</label>
@@ -64,7 +72,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" id="guardarServicioBtn">Crear Servicio</button>
+                        <button type="submit" class="btn btn-primary">Crear Servicio</button>
                     </div>
                 </form>
             </div>
@@ -81,20 +89,29 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editarServicioForm" action="" method="POST" enctype="multipart/form-data">
+                <form id="editarServicioForm" action="" method="POST" enctype="multipart/form-data" novalidate>
                     @csrf
-                    @method('PUT') <!-- Método PUT para actualizar -->
+                    @method('PUT')
                     <div class="mb-3">
                         <label for="editarTitulo" class="form-label">Nombre del Servicio</label>
                         <input type="text" class="form-control" id="editarTitulo" name="nomServicio" required>
+                        <div class="invalid-feedback">
+                            El nombre del servicio es obligatorio.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="editarPrecio" class="form-label">Precio del Servicio</label>
                         <input type="number" class="form-control" id="editarPrecio" name="precio" step="0.01" min="0" required>
+                        <div class="invalid-feedback">
+                            El precio del servicio es obligatorio y debe ser un valor positivo a dos decimales.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="editarDescripcion" class="form-label">Descripción</label>
                         <textarea class="form-control" id="editarDescripcion" name="descripcion" required></textarea>
+                        <div class="invalid-feedback">
+                            La descripción del servicio es obligatoria.
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="editarImagen" class="form-label">Imagen</label>
@@ -102,7 +119,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" id="guardarCambiosBtn">Guardar Cambios</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </div>
                 </form>
             </div>

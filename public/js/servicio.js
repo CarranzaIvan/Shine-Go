@@ -65,4 +65,24 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
+
+    // Validación del formulario de "Crear Nuevo Servicio"
+    const nuevoServicioForm = document.getElementById("nuevoServicioForm");
+    nuevoServicioForm.addEventListener("submit", function (event) {
+        if (!nuevoServicioForm.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        nuevoServicioForm.classList.add("was-validated");
+    });
+
+    // Validación del formulario de "Editar Servicio"
+    const editarServicioForm = document.getElementById("editarServicioForm");
+    editarServicioForm.addEventListener("submit", function (event) {
+        if (!editarServicioForm.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        editarServicioForm.classList.add("was-validated");
+    });
 });
