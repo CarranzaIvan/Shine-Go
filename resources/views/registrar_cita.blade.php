@@ -823,7 +823,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Configuración de la zona horaria de El Salvador
-            var isAuthenticated = {{Auth::check() ? 'true' : 'false'}};
+            var isAuthenticated = "{{ Auth::check() ? 'true' : 'false' }}";
             var options = {
                 timeZone: 'America/El_Salvador',
                 hour: '2-digit',
@@ -862,8 +862,8 @@
                 dateClick: function(info) {
 
                     // Verificar si el usuario está autenticado
-                                     if (!isAuthenticated) {
-                            Swal.fire({
+                    if (isAuthenticated !== 'true') {
+                        Swal.fire({
                             icon: 'info',
                             title: 'Inicia sesión',
                             text: 'Debes iniciar sesión para reservar una cita.',
@@ -962,14 +962,6 @@
                     });
                 },
 
-
-
-
-
-
-
-
-
                 eventClick: function(info) {
                     var eventObj = info.event; // Obtenemos el objeto del evento
 
@@ -994,27 +986,27 @@
                                     Swal.fire({
                                         title: 'Detalles de la Cita',
                                         html: `
-                                        <div style="text-align: left;">
-                                            <b>Servicio:</b> ${response.servicio}<br>
-                                            <b>Fecha:</b> ${response.fecha}<br>
-                                            <b>Hora:</b> ${response.hora}<br>
-                                            <b>Usuario:</b> ${response.usuario}<br><br>
-                                        </div>
-                                        <button id="closeModal" class="btn btn-secondary">Cerrar Ventana</button>
-                                        <button id="deleteCita" class="btn btn-danger">Cancelar Cita</button>
-                                        
-                                    `,
+                                    <div style="text-align: left;">
+                                        <b>Servicio:</b> ${response.servicio}<br>
+                                        <b>Fecha:</b> ${response.fecha}<br>
+                                        <b>Hora:</b> ${response.hora}<br>
+                                        <b>Usuario:</b> ${response.usuario}<br><br>
+                                    </div>
+                                    <button id="closeModal" class="btn btn-secondary">Cerrar Ventana</button>
+                                    <button id="deleteCita" class="btn btn-danger">Cancelar Cita</button>
+                                    
+                                `,
                                         showConfirmButton: false,
                                         width: 600, // Ancho de la alerta
                                         padding: "3em", // Relleno
                                         color: "#716add", // Color del texto
                                         background: "#fff url(/images/trees.png)", // Fondo personalizado
                                         backdrop: `
-                                        rgba(0,0,123,0.4)
-                                        url("{{asset('images/nyan-cat-nyan.gif')}}")
-                                        left top
-                                        no-repeat
-                                        `
+                                    rgba(0,0,123,0.4)
+                                    url("{{asset('images/nyan-cat-nyan.gif')}}")
+                                    left top
+                                    no-repeat
+                                    `
                                     });
 
                                     // Código adicional para los botones dentro de SweetAlert
@@ -1059,7 +1051,7 @@
                                                         success: function(response) {
                                                             if (response.success) {
                                                                 Swal.fire(
-                                                                    '¡Cancelada!',
+                                                                    '¡Eliminada!',
                                                                     'La cita ha sido cancelada.',
                                                                     'success'
                                                                 ).then(() => {
@@ -1106,9 +1098,6 @@
             calendar.render();
         });
     </script>
-
-
-
 
     <script>
         // Función para validar y mostrar el modal de formulario
