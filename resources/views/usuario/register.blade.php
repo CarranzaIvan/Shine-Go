@@ -21,11 +21,6 @@
                                         <label for="nombre">Nombre Completo</label>
                                         <input type="text" class="form-control" id="nombre" name="nombre_completo" required>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="email">Correo Electrónico</label>
-                                        <input type="email" class="form-control" id="email" name="correo" required>
-                                    </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -39,6 +34,10 @@
                                                 <input type="text" class="form-control" id="telefono" name="telefono" required>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Correo Electrónico</label>
+                                        <input type="email" class="form-control" id="email" name="correo" required>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
