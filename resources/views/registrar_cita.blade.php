@@ -459,7 +459,6 @@
                                 url: detalleUrl,
                                 method: 'GET',
                                 success: function(data) {
-                                    console.log(data); // Verificar los datos recibidos
                                     $('#cita_id').val(response.cita_id);
                                     $('#nom_servicio').text(data.servicio);
                                     $('#name_service').val(data.servicio);
@@ -468,13 +467,13 @@
                                     $('#subtotal_servicio').val(data.precio);
                                     if (data.descuento > 0) {
                                         $('#posee_descuento').show();
-                                        $('#descuentoLbl').text('- $' + data.precio * (data.descuento / 100));
-                                        $('#descuento').val(data.precio * (data.descuento / 100));
+                                        $('#descuentoLbl').text('- $' + (data.precio * (data.descuento / 100)).toFixed(2));
+                                        $('#descuento').val((data.precio * (data.descuento / 100)).toFixed(2));
                                     } else {
                                         $('#posee_descuento').hide();
                                     }
                                     $('#pago').text('$' + ((data.precio - (data.precio * (data.descuento / 100))).toFixed(2)));
-                                    $('#total_a_pagar_hidden').val(data.precio - (data.precio * (data.descuento / 100)));
+                                    $('#total_a_pagar_hidden').val((data.precio - (data.precio * (data.descuento / 100))).toFixed(2));
                                 },
                                 error: function(xhr) {
                                     console.error("Error en la solicitud AJAX:", xhr);

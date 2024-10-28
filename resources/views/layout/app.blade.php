@@ -58,6 +58,12 @@
                     <a class="nav-link" href="{{ route('seguimiento') }}">Mis Citas</a>
                 </li>
                 @endauth
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('verPreguntas')}}">Preguntas frecuentes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('verTerminos')}}">Terminos & condiciones</a>
+                </li>
             </ul>
             <ul class="navbar-nav ml-auto">
                 @guest
